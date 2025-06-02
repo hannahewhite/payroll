@@ -7,6 +7,7 @@ import {
   Alert,
 } from '@mui/material';
 import MFASetupModal from './MFASetupModal';
+import AuthenticatorSetupModal from './AuthenticatorSetupModal';
 
 type ContextType = {
   onMfaComplete: () => void;
@@ -16,6 +17,7 @@ const AccountSecurity: React.FC = () => {
   const navigate = useNavigate();
   const { onMfaComplete } = useOutletContext<ContextType>();
   const [isMFAModalOpen, setIsMFAModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMFAEnabled, setIsMFAEnabled] = useState(false);
 
   const handleMFAStatusChange = (isEnabled: boolean) => {
@@ -52,6 +54,18 @@ const AccountSecurity: React.FC = () => {
     setIsMFAModalOpen(false);
   };
 
+  const handleAuthSetup = () => {
+    setIsAuthModalOpen(true);
+  };
+
+  const handleAuthModalClose = () => {
+    setIsAuthModalOpen(false);
+  };
+
+  const handleAuthComplete = () => {
+    setIsAuthModalOpen(false);
+  };
+
   return (
     <Box sx={{ flex: 1 }}>
       <Box sx={{ mb: 3 }}>
@@ -78,6 +92,7 @@ const AccountSecurity: React.FC = () => {
               backgroundColor: '#F4FBF7',
               color: '#232329',
               border: '1px solid #8FCEA8',
+              borderRadius: '8px',
               '& .MuiTypography-root': {
                 color: '#232329',
               },
@@ -91,6 +106,7 @@ const AccountSecurity: React.FC = () => {
 
           <Button
             variant="outlined"
+            onClick={handleAuthSetup}
             sx={{
               borderColor: '#E5E7EB',
               color: '#374151',
@@ -102,14 +118,11 @@ const AccountSecurity: React.FC = () => {
               height: '36px',
             }}
           >
-            Set up authenticator app
+            Add authentication app
           </Button>
         </>
       ) : (
         <Box sx={{ mt: 4 }}>
-          <Typography variant="subtitle1" sx={{ mb: 2 }}>
-            Multi-factor authentication
-          </Typography>
           <Button
             variant="outlined"
             onClick={handleMFASetup}
@@ -133,6 +146,12 @@ const AccountSecurity: React.FC = () => {
         open={isMFAModalOpen}
         onClose={handleMFAModalClose}
         onComplete={handleMFAComplete}
+      />
+
+      <AuthenticatorSetupModal
+        open={isAuthModalOpen}
+        onClose={handleAuthModalClose}
+        onComplete={handleAuthComplete}
       />
     </Box>
   );

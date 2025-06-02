@@ -9,6 +9,7 @@ import PayrollDetails from './components/PayrollDetails';
 import PayCalendars from './components/PayCalendars';
 import AccountSecurity from './components/AccountSecurity';
 import SetupLayout from './components/SetupLayout';
+import PayrunDetailsPage from './components/PayrunDetailsPage';
 import theme from './theme';
 
 function App() {
@@ -19,6 +20,15 @@ function App() {
           <Routes>
             <Route path="/" element={<WelcomeScreen />} />
             <Route path="/payruns" element={<PayrunsPage />} />
+            <Route path="/payruns/:id" element={
+              <PayrunDetailsPage 
+                payrunData={{
+                  period: '26 Feb - 2 Mar',
+                  totalPayslips: 12,
+                  totalAmount: '$112,000.00',
+                }}
+              />
+            } />
             <Route path="/setup" element={<SetupLayout />}>
               <Route path="business-details" element={<BusinessDetails />} />
               <Route path="payroll-details" element={<PayrollDetails />} />

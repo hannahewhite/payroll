@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
@@ -22,6 +22,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import { useNavigate } from 'react-router-dom';
+import StartPayrunModal from './StartPayrunModal';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   borderBottom: '1px solid #E5E7EB',
@@ -116,6 +117,7 @@ const payRunData = [
 
 const PayrunsPage: React.FC = () => {
   const [tabValue, setTabValue] = React.useState(0);
+  const [selectedPayrun, setSelectedPayrun] = useState<typeof payRunData[0] | null>(null);
   const navigate = useNavigate();
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -124,6 +126,10 @@ const PayrunsPage: React.FC = () => {
 
   const handleBackToSetup = () => {
     navigate('/setup', { state: { activeStep: 0 } });
+  };
+
+  const handleStartPayrun = (payrun: typeof payRunData[0]) => {
+    setSelectedPayrun(payrun);
   };
 
   return (
@@ -190,7 +196,7 @@ const PayrunsPage: React.FC = () => {
                 color: '#374151',
                 borderColor: '#E5E7EB',
                 px: 3,
-                py: 1,
+                height: '32px',
                 fontSize: '14px',
                 fontWeight: 500,
                 '&:hover': {
@@ -257,11 +263,14 @@ const PayrunsPage: React.FC = () => {
                     <StyledTableCell>
                       <Button
                         variant="outlined"
+                        onClick={() => handleStartPayrun(row)}
                         sx={{
                           textTransform: 'none',
                           borderRadius: '8px',
-                          px: 3,
-                          py: 1,
+                          px: 2,
+                          py: 0,
+                          minHeight: '32px',
+                          height: '32px',
                           fontSize: '14px',
                           fontWeight: 500,
                           color: '#374151',
@@ -282,6 +291,11 @@ const PayrunsPage: React.FC = () => {
           </TableContainer>
         </Box>
       </Box>
+      <StartPayrunModal
+        open={selectedPayrun !== null}
+        onClose={() => setSelectedPayrun(null)}
+        payrunData={selectedPayrun || payRunData[0]}
+      />
     </Box>
   );
 };
