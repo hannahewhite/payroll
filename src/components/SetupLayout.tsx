@@ -9,18 +9,18 @@ const SetupLayout: React.FC = () => {
   const [isMfaComplete, setIsMfaComplete] = useState(false);
 
   const menuItems = [
-    { path: 'setup/business-details', label: 'Business details' },
-    { path: 'setup/payroll-details', label: 'Payroll details' },
-    { path: 'setup/pay-calendars', label: 'Pay calendars' },
-    { path: 'setup/account-security', label: 'Account security' },
+    { path: 'business-details', label: 'Business details' },
+    { path: 'payroll-details', label: 'Payroll details' },
+    { path: 'pay-calendars', label: 'Pay calendars' },
+    { path: 'account-security', label: 'Account security' },
   ];
 
-  const currentStepIndex = menuItems.findIndex(item => location.pathname.includes(item.path.split('/')[1]));
+  const currentStepIndex = menuItems.findIndex(item => location.pathname.includes(item.path));
   const isLastStep = location.pathname.includes('account-security');
 
   const handleBack = () => {
     if (currentStepIndex > 0) {
-      navigate(`../${menuItems[currentStepIndex - 1].path}`);
+      navigate(`/setup/${menuItems[currentStepIndex - 1].path}`);
     } else {
       navigate('/');
     }
@@ -28,9 +28,9 @@ const SetupLayout: React.FC = () => {
 
   const handleNext = () => {
     if (!isLastStep) {
-      navigate(`../${menuItems[currentStepIndex + 1].path}`);
+      navigate(`/setup/${menuItems[currentStepIndex + 1].path}`);
     } else if (isMfaComplete) {
-      navigate('/pay-runs');
+      navigate('/payruns', { replace: true });
     }
   };
 

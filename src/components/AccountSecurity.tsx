@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -8,13 +8,21 @@ import {
 } from '@mui/material';
 import MFASetupModal from './MFASetupModal';
 
+type ContextType = {
+  onMfaComplete: () => void;
+};
+
 const AccountSecurity: React.FC = () => {
   const navigate = useNavigate();
+  const { onMfaComplete } = useOutletContext<ContextType>();
   const [isMFAModalOpen, setIsMFAModalOpen] = useState(false);
   const [isMFAEnabled, setIsMFAEnabled] = useState(false);
 
   const handleMFAStatusChange = (isEnabled: boolean) => {
     setIsMFAEnabled(isEnabled);
+    if (isEnabled) {
+      onMfaComplete();
+    }
   };
 
   useEffect(() => {

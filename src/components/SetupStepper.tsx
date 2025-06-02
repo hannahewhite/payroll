@@ -10,7 +10,7 @@ const CustomConnector = styled(StepConnector)(({ theme }) => ({
   [`& .${stepConnectorClasses.line}`]: {
     borderColor: '#E5E7EB',
     borderLeftWidth: 2,
-    minHeight: 40,
+    minHeight: 16,
   },
 }));
 
@@ -64,7 +64,7 @@ const SetupStepper: React.FC = () => {
               },
               '& .MuiStepIcon-root': {
                 color: '#FFFFFF',
-                border: '2px solid #E5E7EB',
+                border: '0.8px solid #E5E7EB',
                 borderRadius: '50%',
                 width: '24px',
                 height: '24px',
