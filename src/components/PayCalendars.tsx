@@ -1,5 +1,4 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
@@ -7,124 +6,85 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
   Paper,
+  Snackbar,
+  Alert,
 } from '@mui/material';
+import CreatePayCalendarModal from './CreatePayCalendarModal';
+
+interface PayCalendar {
+  name: string;
+  frequency: string;
+  startDay: string;
+  businessEntity?: string;
+}
 
 const PayCalendars: React.FC = () => {
-  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [payCalendars, setPayCalendars] = useState<PayCalendar[]>([]);
+  const [showToast, setShowToast] = useState(false);
 
-  const handleNext = () => {
-    navigate('/setup/account-security');
+  const handleCreatePayCalendar = (payCalendar: PayCalendar) => {
+    setPayCalendars([...payCalendars, payCalendar]);
+    setShowToast(true);
   };
 
-  const handleBack = () => {
-    navigate('/setup/payroll-details');
+  const handleCloseToast = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setShowToast(false);
   };
 
   return (
-    <Box sx={{ flex: 1 }}>
+    <Box sx={{ p: 3 }}>
       <Box sx={{ mb: 3 }}>
-        <Typography variant="h5" sx={{ mb: 1 }}>
+        <Typography variant="h4" sx={{ fontSize: '30px', fontWeight: 600, mb: 2 }}>
           Pay calendars
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Set up your pay run schedules
+          Assign existing pay calendar or create a new one that belongs to this entity
         </Typography>
       </Box>
 
-      <Paper sx={{ 
-        borderRadius: 2, 
-        border: '1px solid #E5E7EB',
-        boxShadow: 'none',
-        overflow: 'hidden',
-        mb: 3
-      }}>
+      <TableContainer component={Paper} sx={{ boxShadow: 'none', mb: 3 }}>
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: '#F9FAFB' }}>
-              <TableCell 
-                sx={{ 
-                  py: 1.5,
-                  px: 3,
-                  borderBottom: '1px solid #E5E7EB',
-                  color: '#111827',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                }}
-              >
-                Pay calendar
-              </TableCell>
-              <TableCell 
-                sx={{ 
-                  py: 1.5,
-                  px: 3,
-                  borderBottom: '1px solid #E5E7EB',
-                  color: '#111827',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                }}
-              >
-                Frequency
-              </TableCell>
-              <TableCell 
-                sx={{ 
-                  py: 1.5,
-                  px: 3,
-                  borderBottom: '1px solid #E5E7EB',
-                  color: '#111827',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                }}
-              >
-                Start date
-              </TableCell>
+            <TableRow>
+              <TableCell>Pay calendar</TableCell>
+              <TableCell>Frequency</TableCell>
+              <TableCell>Start date</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow>
-              <TableCell
-                sx={{
-                  py: 2,
-                  px: 3,
-                  borderBottom: '1px solid #E5E7EB',
-                  color: '#111827',
-                  fontSize: '14px',
-                }}
-              >
-                Monthly A
-              </TableCell>
-              <TableCell
-                sx={{
-                  py: 2,
-                  px: 3,
-                  borderBottom: '1px solid #E5E7EB',
-                  color: '#111827',
-                  fontSize: '14px',
-                }}
-              >
-                Monthly
-              </TableCell>
-              <TableCell
-                sx={{
-                  py: 2,
-                  px: 3,
-                  borderBottom: '1px solid #E5E7EB',
-                  color: '#111827',
-                  fontSize: '14px',
-                }}
-              >
-                26th
-              </TableCell>
-            </TableRow>
+            {payCalendars.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={3} align="center" sx={{ py: 6 }}>
+                  <Typography color="text.secondary">
+                    No pay calendars found
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            ) : (
+              payCalendars.map((calendar, index) => (
+                <TableRow key={index}>
+                  <TableCell>{calendar.name}</TableCell>
+                  <TableCell>{calendar.frequency}</TableCell>
+                  <TableCell>{calendar.startDay}</TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
-      </Paper>
+      </TableContainer>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Box>
         <Button
           variant="outlined"
+          onClick={() => setIsModalOpen(true)}
           sx={{
             borderColor: '#E5E7EB',
             color: '#374151',
@@ -139,6 +99,36 @@ const PayCalendars: React.FC = () => {
           Create new
         </Button>
       </Box>
+
+      <CreatePayCalendarModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleCreatePayCalendar}
+      />
+
+      <Snackbar
+        open={showToast}
+        autoHideDuration={3000}
+        onClose={handleCloseToast}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      >
+        <Alert 
+          onClose={handleCloseToast}
+          severity="success"
+          sx={{ 
+            bgcolor: '#111827',
+            color: '#FFFFFF',
+            '& .MuiAlert-icon': {
+              color: '#FFFFFF'
+            },
+            '& .MuiAlert-action': {
+              color: '#FFFFFF'
+            }
+          }}
+        >
+          Pay calendar created successfully
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

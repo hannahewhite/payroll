@@ -9,8 +9,9 @@ import {
   Box,
   Typography,
   Link,
+  InputAdornment,
 } from '@mui/material';
-import AuthenticatorSetupModal from './AuthenticatorSetupModal';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 interface MFASetupModalProps {
   open: boolean;
@@ -25,7 +26,8 @@ const MFASetupModal: React.FC<MFASetupModalProps> = ({ open, onClose, onComplete
   const [step, setStep] = useState<'password' | 'phone' | 'verify'>('password');
   const [passwordError, setPasswordError] = useState(false);
   const [verificationError, setVerificationError] = useState(false);
-  const [authenticatorModalOpen, setAuthenticatorModalOpen] = useState(false);
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
+  const [countdown, setCountdown] = useState(0);
 
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const phoneInputRef = useRef<HTMLInputElement>(null);
@@ -46,6 +48,18 @@ const MFASetupModal: React.FC<MFASetupModalProps> = ({ open, onClose, onComplete
     }
   }, [step, open]);
 
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (countdown > 0) {
+      timer = setInterval(() => {
+        setCountdown(prev => prev - 1);
+      }, 1000);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [countdown]);
+
   const handleContinue = () => {
     if (step === 'password') {
       if (password === 'barry123') {
@@ -57,11 +71,16 @@ const MFASetupModal: React.FC<MFASetupModalProps> = ({ open, onClose, onComplete
       }
     } else if (step === 'phone') {
       setStep('verify');
+      setCountdown(60);
       // Handle sending code to phone number
       console.log('Sending code to:', phoneNumber);
-    } else {
+    } else if (step === 'verify') {
+      const cleanCode = verificationCode.replace(/\s/g, '');
+      if (cleanCode.length !== 6) {
+        setVerificationError(true);
+        return;
+      }
       if (verificationCode === '123 123') {
-        console.log('Verifying code:', verificationCode);
         onComplete();
       } else {
         setVerificationError(true);
@@ -77,11 +96,15 @@ const MFASetupModal: React.FC<MFASetupModalProps> = ({ open, onClose, onComplete
     setPasswordError(false);
     setVerificationError(false);
     setStep('password');
+    setCountdown(0);
   };
 
   const handleResendNumber = () => {
-    // Handle resending verification code
-    console.log('Resending code to:', phoneNumber);
+    if (countdown === 0) {
+      setCountdown(60); // Reset countdown
+      // Handle resending verification code
+      console.log('Resending code to:', phoneNumber);
+    }
   };
 
   const handleBack = () => {
@@ -89,6 +112,7 @@ const MFASetupModal: React.FC<MFASetupModalProps> = ({ open, onClose, onComplete
       setStep('phone');
       setVerificationError(false);
       setVerificationCode('');
+      setCountdown(0);
     } else if (step === 'phone') {
       setStep('password');
       setPhoneNumber('');
@@ -116,7 +140,7 @@ const MFASetupModal: React.FC<MFASetupModalProps> = ({ open, onClose, onComplete
           fontWeight: 600,
         }}
       >
-        Set up multi factor authentication
+        Set up SMS verification
       </DialogTitle>
       <DialogContent sx={{ pt: '8px !important' }}>
         {step === 'password' && (
@@ -136,7 +160,7 @@ const MFASetupModal: React.FC<MFASetupModalProps> = ({ open, onClose, onComplete
                 fontSize: '16px'
               }}
             >
-              We need to verify your identity to set up multi factor authentication.
+              We need to verify your identity to set up SMS verification.
             </Typography>
             <Typography variant="subtitle1" sx={{ mb: 1 }}>
               Enter password
@@ -256,6 +280,7 @@ const MFASetupModal: React.FC<MFASetupModalProps> = ({ open, onClose, onComplete
                     : input;
                   setVerificationCode(formattedInput);
                   setVerificationError(false);
+                  setVerificationSuccess(formattedInput === '123 123');
                 }
               }}
               onKeyDown={(e) => {
@@ -267,10 +292,27 @@ const MFASetupModal: React.FC<MFASetupModalProps> = ({ open, onClose, onComplete
               error={verificationError}
               helperText={verificationError ? "Incorrect code" : ""}
               inputProps={{ maxLength: 7 }}
+              InputProps={{
+                endAdornment: verificationSuccess && (
+                  <InputAdornment position="end">
+                    <CheckCircleIcon sx={{ color: '#30A46C', fontSize: 20 }} />
+                  </InputAdornment>
+                )
+              }}
               size="small"
               sx={{
                 '& .MuiOutlinedInput-root': {
                   height: '40px',
+                  backgroundColor: '#fff',
+                  '& fieldset': {
+                    borderColor: '#E5E7EB',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#E5E7EB',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#3D1CBA',
+                  },
                 },
                 '& .MuiFormHelperText-root': {
                   fontSize: '14px',
@@ -285,15 +327,17 @@ const MFASetupModal: React.FC<MFASetupModalProps> = ({ open, onClose, onComplete
                 component="button"
                 variant="body2"
                 onClick={handleResendNumber}
+                disabled={countdown > 0}
                 sx={{
-                  color: '#3D1CBA',
+                  color: countdown > 0 ? '#6B7280' : '#3D1CBA',
                   textDecoration: 'none',
+                  cursor: countdown > 0 ? 'default' : 'pointer',
                   '&:hover': {
                     textDecoration: 'none',
                   }
                 }}
               >
-                Resend code
+                {countdown > 0 ? `Resend code (${countdown}s)` : 'Resend code'}
               </Link>
             </Box>
           </Box>
@@ -309,7 +353,7 @@ const MFASetupModal: React.FC<MFASetupModalProps> = ({ open, onClose, onComplete
             }
           }}
         >
-          {step === 'verify' ? 'Back' : 'Cancel'}
+          {step === 'verify' ? 'Back' : step === 'password' ? 'Cancel' : 'Back'}
         </Button>
         <Button
           variant="contained"
@@ -325,17 +369,9 @@ const MFASetupModal: React.FC<MFASetupModalProps> = ({ open, onClose, onComplete
             px: 3,
           }}
         >
-          {step === 'password' ? 'Continue' : step === 'phone' ? 'Send code' : 'Finish set up'}
+          {step === 'verify' ? 'Finish set up' : step === 'password' ? 'Continue' : 'Send code'}
         </Button>
       </DialogActions>
-      <AuthenticatorSetupModal
-        open={authenticatorModalOpen}
-        onClose={() => setAuthenticatorModalOpen(false)}
-        onComplete={() => {
-          setAuthenticatorModalOpen(false);
-          onComplete();
-        }}
-      />
     </Dialog>
   );
 };

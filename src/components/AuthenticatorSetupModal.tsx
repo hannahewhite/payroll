@@ -8,8 +8,9 @@ import {
   TextField,
   Box,
   Typography,
-  Link,
+  InputAdornment,
 } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { QRCodeSVG } from 'qrcode.react';
 
 interface AuthenticatorSetupModalProps {
@@ -21,9 +22,16 @@ interface AuthenticatorSetupModalProps {
 const AuthenticatorSetupModal: React.FC<AuthenticatorSetupModalProps> = ({ open, onClose, onComplete }) => {
   const [verificationCode, setVerificationCode] = useState('');
   const [verificationError, setVerificationError] = useState(false);
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
+  const [step, setStep] = useState('download');
 
   const handleFinish = () => {
-    if (verificationCode === '123456') {
+    const cleanCode = verificationCode.replace(/\s/g, '');
+    if (cleanCode.length !== 6) {
+      setVerificationError(true);
+      return;
+    }
+    if (verificationCode === '123 123') {
       onComplete();
     } else {
       setVerificationError(true);
@@ -34,6 +42,8 @@ const AuthenticatorSetupModal: React.FC<AuthenticatorSetupModalProps> = ({ open,
     onClose();
     setVerificationCode('');
     setVerificationError(false);
+    setVerificationSuccess(false);
+    setStep('download');
   };
 
   return (
@@ -53,82 +63,119 @@ const AuthenticatorSetupModal: React.FC<AuthenticatorSetupModalProps> = ({ open,
           pb: 1,
           fontSize: '24px',
           fontWeight: 600,
+          fontFamily: '"SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif',
         }}
       >
-        Set up authenticator app
+        Set up an authentication app
       </DialogTitle>
       <DialogContent sx={{ pt: '8px !important' }}>
-        <Box>
-          <Typography variant="subtitle1" sx={{ mb: '2px' }}>
+        <Box sx={{ mb: 4 }}>
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              mb: '2px',
+              fontSize: '14px',
+              fontWeight: 600,
+              fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
+            }}
+          >
             Download an authenticator app
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-            Download and install one of these authentication apps on your device
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              color: '#6B7280',
+              fontSize: '14px',
+              fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
+            }}
+          >
+            You can download an authenticator app e.g. Google auth
           </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 4 }}>
-            <Link
-              href="https://apps.apple.com/us/app/google-authenticator/id388497605"
-              target="_blank"
-              sx={{
-                color: '#3D1CBA',
-                textDecoration: 'none',
-                fontSize: '14px',
-                '&:hover': { textDecoration: 'none' }
-              }}
-            >
-              Google Authenticator (iOS)
-            </Link>
-            <Link
-              href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2"
-              target="_blank"
-              sx={{
-                color: '#3D1CBA',
-                textDecoration: 'none',
-                fontSize: '14px',
-                '&:hover': { textDecoration: 'none' }
-              }}
-            >
-              Google Authenticator (Android)
-            </Link>
-          </Box>
+        </Box>
 
-          <Typography variant="subtitle1" sx={{ mb: '2px' }}>
+        <Box sx={{ mb: 4 }}>
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              mb: '2px',
+              fontSize: '14px',
+              fontWeight: 600,
+              fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
+            }}
+          >
             Scan the QR code
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              color: '#6B7280',
+              fontSize: '14px',
+              mb: 2,
+              fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
+            }}
+          >
             Open your authenticator app and scan this QR code
           </Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-start', mb: 2 }}>
             <QRCodeSVG
               value="otpauth://totp/PayrollApp:user@example.com?secret=HXDMVJECJJWSRB3HWIZR4IFUGFTMXBOZ&issuer=PayrollApp"
-              size={200}
+              size={160}
               level="H"
             />
           </Box>
+        </Box>
 
-          <Typography variant="subtitle1" sx={{ mb: '2px' }}>
-            Enter verification code
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-            Enter the 6-digit code shown in your authenticator app
+        <Box>
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              mb: '2px',
+              fontSize: '14px',
+              fontWeight: 600,
+              fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
+            }}
+          >
+            Enter 6 digit code
           </Typography>
           <TextField
             fullWidth
-            placeholder="000000"
+            placeholder="000 000"
             value={verificationCode}
             onChange={(e) => {
-              const input = e.target.value.replace(/\D/g, '');
-              if (input.length <= 6) {
-                setVerificationCode(input);
+              const input = e.target.value.replace(/\s/g, '');
+              if (/^\d*$/.test(input)) {
+                const formattedInput = input.length > 3 
+                  ? input.slice(0, 3) + ' ' + input.slice(3, 6)
+                  : input;
+                setVerificationCode(formattedInput);
                 setVerificationError(false);
+                setVerificationSuccess(formattedInput === '123 123');
               }
             }}
             error={verificationError}
             helperText={verificationError ? "Incorrect code" : ""}
+            inputProps={{ maxLength: 7 }}
+            InputProps={{
+              endAdornment: verificationSuccess && (
+                <InputAdornment position="end">
+                  <CheckCircleIcon sx={{ color: '#30A46C', fontSize: 20 }} />
+                </InputAdornment>
+              )
+            }}
             size="small"
             sx={{
               '& .MuiOutlinedInput-root': {
                 height: '40px',
+                backgroundColor: '#fff',
+                '& fieldset': {
+                  borderColor: '#E5E7EB',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#E5E7EB',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#3D1CBA',
+                },
               },
               '& .MuiFormHelperText-root': {
                 fontSize: '14px',
@@ -140,14 +187,19 @@ const AuthenticatorSetupModal: React.FC<AuthenticatorSetupModalProps> = ({ open,
           />
         </Box>
       </DialogContent>
-      <DialogActions sx={{ px: 3, pb: 2 }}>
+      <DialogActions sx={{ px: 3, pb: 2, gap: 1 }}>
         <Button
           onClick={handleCancel}
           sx={{
-            color: '#6B7280',
+            color: '#3D1CBA',
+            backgroundColor: '#F5F3FF',
             '&:hover': {
-              backgroundColor: 'rgba(107, 114, 128, 0.04)',
-            }
+              backgroundColor: '#EDE9FE',
+            },
+            textTransform: 'none',
+            height: '36px',
+            px: 3,
+            fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
           }}
         >
           Cancel
@@ -164,9 +216,10 @@ const AuthenticatorSetupModal: React.FC<AuthenticatorSetupModalProps> = ({ open,
             textTransform: 'none',
             height: '36px',
             px: 3,
+            fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
           }}
         >
-          Finish setup
+          Finish set up
         </Button>
       </DialogActions>
     </Dialog>

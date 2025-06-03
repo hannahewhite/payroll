@@ -23,34 +23,19 @@ const WelcomeScreen: React.FC = () => {
       <Container maxWidth="lg">
         <Box sx={{ textAlign: 'center', mb: 8 }}>
           <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
-            <Typography 
-              component="span" 
-              sx={{ 
-                fontSize: '32px',
-                fontWeight: 600,
-                color: '#1A1A1A',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1
-              }}
-            >
-              payroll
-              <Box 
-                component="img" 
-                src="/deputy-asterisk.svg" 
-                sx={{ 
-                  width: '24px',
-                  height: '24px',
-                  mt: '4px'
-                }} 
-                alt="Deputy asterisk"
-              />
-            </Typography>
+            <img 
+              src="/images/payroll-logo.svg" 
+              alt="Payroll" 
+              style={{ 
+                height: '32px',
+                width: 'auto',
+              }} 
+            />
           </Box>
 
-          <Typography 
-            variant="h1" 
-            sx={{ 
+          <Typography
+            variant="h1"
+            sx={{
               fontSize: '40px', 
               fontWeight: 600,
               color: '#1A1A1A',
@@ -97,9 +82,7 @@ const WelcomeScreen: React.FC = () => {
           </Box>
         </Box>
 
-        {/* @ts-ignore */}
         <Grid container spacing={4}>
-          {/* @ts-ignore */}
           <Grid item xs={12} md={4}>
             <Card sx={{ 
               height: '100%', 
@@ -134,7 +117,6 @@ const WelcomeScreen: React.FC = () => {
             </Card>
           </Grid>
 
-          {/* @ts-ignore */}
           <Grid item xs={12} md={4}>
             <Card sx={{ 
               height: '100%', 
@@ -169,7 +151,6 @@ const WelcomeScreen: React.FC = () => {
             </Card>
           </Grid>
 
-          {/* @ts-ignore */}
           <Grid item xs={12} md={4}>
             <Card sx={{ 
               height: '100%', 

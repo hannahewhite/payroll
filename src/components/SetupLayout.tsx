@@ -7,6 +7,7 @@ const SetupLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMfaComplete, setIsMfaComplete] = useState(false);
+  const [showMfaError, setShowMfaError] = useState(false);
 
   const menuItems = [
     { path: 'business-details', label: 'Business details' },
@@ -29,13 +30,18 @@ const SetupLayout: React.FC = () => {
   const handleNext = () => {
     if (!isLastStep) {
       navigate(`/setup/${menuItems[currentStepIndex + 1].path}`);
-    } else if (isMfaComplete) {
+    } else {
+      if (!isMfaComplete) {
+        setShowMfaError(true);
+        return;
+      }
       navigate('/payruns', { replace: true });
     }
   };
 
   const handleMfaComplete = () => {
     setIsMfaComplete(true);
+    setShowMfaError(false);
   };
 
   return (
@@ -97,11 +103,14 @@ const SetupLayout: React.FC = () => {
             marginLeft: '240px',
             minHeight: 'calc(100vh - 88px)',
             position: 'relative',
-            pb: '80px', // Space for footer
+            pb: '80px',
           }}
         >
           <Box sx={{ maxWidth: '1000px', margin: '0 auto', p: 4 }}>
-            <Outlet context={{ onMfaComplete: handleMfaComplete }} />
+            <Outlet context={{ 
+              onMfaComplete: handleMfaComplete,
+              showMfaError: showMfaError,
+            }} />
           </Box>
 
           {/* Footer Navigation */}
@@ -113,7 +122,7 @@ const SetupLayout: React.FC = () => {
               width: '100%',
               left: '50%',
               transform: 'translateX(-50%)',
-              marginLeft: '120px', // Half of sidebar width
+              marginLeft: '120px',
               height: '80px',
               bgcolor: '#FFFFFF',
               borderTop: '0.8px solid #E5E7EB',
@@ -152,7 +161,7 @@ const SetupLayout: React.FC = () => {
                 px: 4,
               }}
             >
-              {isLastStep && isMfaComplete ? 'Finish setup' : 'Next'}
+              {isLastStep ? 'Finish set up' : 'Next'}
             </Button>
           </Box>
         </Box>

@@ -125,7 +125,7 @@ const PayrunsPage: React.FC = () => {
   };
 
   const handleBackToSetup = () => {
-    navigate('/setup', { state: { activeStep: 0 } });
+    navigate('/setup/business-details', { state: { activeStep: 0 } });
   };
 
   const handleStartPayrun = (payrun: typeof payRunData[0]) => {
