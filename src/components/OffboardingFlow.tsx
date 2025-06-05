@@ -33,6 +33,7 @@ interface FormData {
 const OffboardingFlow: React.FC = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
+  const [showErrors, setShowErrors] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     terminationDate: null,
     lastWorkingDate: null,
@@ -44,7 +45,24 @@ const OffboardingFlow: React.FC = () => {
     archiveTime: '11:59pm',
   });
 
+  const isFirstStepValid = () => {
+    return (
+      formData.terminationDate !== null &&
+      formData.lastWorkingDate !== null &&
+      formData.reasonForLeaving !== '' &&
+      formData.atoReason !== '' &&
+      formData.sentiment !== ''
+    );
+  };
+
   const handleNext = () => {
+    if (step === 0) {
+      if (!isFirstStepValid()) {
+        setShowErrors(true);
+        return;
+      }
+      setShowErrors(false);
+    }
     setStep(step + 1);
   };
 
@@ -100,7 +118,7 @@ const OffboardingFlow: React.FC = () => {
                   onChange={handleDateChange('terminationDate')}
                   dateFormat="dd MMM yyyy"
                   placeholderText="Select date"
-                  className="custom-datepicker"
+                  className={`custom-datepicker ${showErrors && !formData.terminationDate ? 'error' : ''}`}
                   wrapperClassName="custom-datepicker-wrapper"
                   customInput={
                     <input
@@ -110,7 +128,7 @@ const OffboardingFlow: React.FC = () => {
                         padding: '6px 12px',
                         fontSize: '14px',
                         fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
-                        border: '1px solid #E5E7EB',
+                        border: `1px solid ${showErrors && !formData.terminationDate ? '#AF1105' : '#E5E7EB'}`,
                         borderRadius: '8px',
                         outline: 'none',
                         boxSizing: 'border-box',
@@ -118,6 +136,11 @@ const OffboardingFlow: React.FC = () => {
                     />
                   }
                 />
+                {showErrors && !formData.terminationDate && (
+                  <Typography sx={{ color: '#AF1105', fontSize: '14px', mt: 1 }}>
+                    Please select a termination date
+                  </Typography>
+                )}
               </Box>
 
               <Box>
@@ -132,7 +155,7 @@ const OffboardingFlow: React.FC = () => {
                   onChange={handleDateChange('lastWorkingDate')}
                   dateFormat="dd MMM yyyy"
                   placeholderText="Select date"
-                  className="custom-datepicker"
+                  className={`custom-datepicker ${showErrors && !formData.lastWorkingDate ? 'error' : ''}`}
                   wrapperClassName="custom-datepicker-wrapper"
                   customInput={
                     <input
@@ -142,7 +165,7 @@ const OffboardingFlow: React.FC = () => {
                         padding: '6px 12px',
                         fontSize: '14px',
                         fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
-                        border: '1px solid #E5E7EB',
+                        border: `1px solid ${showErrors && !formData.lastWorkingDate ? '#AF1105' : '#E5E7EB'}`,
                         borderRadius: '8px',
                         outline: 'none',
                         boxSizing: 'border-box',
@@ -150,6 +173,11 @@ const OffboardingFlow: React.FC = () => {
                     />
                   }
                 />
+                {showErrors && !formData.lastWorkingDate && (
+                  <Typography sx={{ color: '#AF1105', fontSize: '14px', mt: 1 }}>
+                    Please select a last working date
+                  </Typography>
+                )}
               </Box>
 
               <Box>
@@ -161,6 +189,7 @@ const OffboardingFlow: React.FC = () => {
                   value={formData.reasonForLeaving}
                   onChange={handleSelectChange('reasonForLeaving')}
                   displayEmpty
+                  error={showErrors && !formData.reasonForLeaving}
                   sx={{
                     height: '32px',
                     width: '300px',
@@ -169,13 +198,13 @@ const OffboardingFlow: React.FC = () => {
                       fontSize: '14px',
                     },
                     '& .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#E5E7EB',
+                      borderColor: showErrors && !formData.reasonForLeaving ? '#AF1105' : '#E5E7EB',
                     },
                     '&:hover .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#D1D5DB',
+                      borderColor: showErrors && !formData.reasonForLeaving ? '#AF1105' : '#D1D5DB',
                     },
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#3D1CBA',
+                      borderColor: showErrors && !formData.reasonForLeaving ? '#AF1105' : '#3D1CBA',
                     },
                   }}
                 >
@@ -186,6 +215,11 @@ const OffboardingFlow: React.FC = () => {
                   <MenuItem value="personal">Personal reasons</MenuItem>
                   <MenuItem value="other">Other</MenuItem>
                 </Select>
+                {showErrors && !formData.reasonForLeaving && (
+                  <Typography sx={{ color: '#AF1105', fontSize: '14px', mt: 1 }}>
+                    Please select a reason for leaving
+                  </Typography>
+                )}
               </Box>
 
               <Box>
@@ -197,6 +231,7 @@ const OffboardingFlow: React.FC = () => {
                   value={formData.atoReason}
                   onChange={handleSelectChange('atoReason')}
                   displayEmpty
+                  error={showErrors && !formData.atoReason}
                   sx={{
                     height: '32px',
                     width: '300px',
@@ -205,13 +240,13 @@ const OffboardingFlow: React.FC = () => {
                       fontSize: '14px',
                     },
                     '& .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#E5E7EB',
+                      borderColor: showErrors && !formData.atoReason ? '#AF1105' : '#E5E7EB',
                     },
                     '&:hover .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#D1D5DB',
+                      borderColor: showErrors && !formData.atoReason ? '#AF1105' : '#D1D5DB',
                     },
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#3D1CBA',
+                      borderColor: showErrors && !formData.atoReason ? '#AF1105' : '#3D1CBA',
                     },
                   }}
                 >
@@ -221,6 +256,11 @@ const OffboardingFlow: React.FC = () => {
                   <MenuItem value="dismissal">Dismissal</MenuItem>
                   <MenuItem value="contract_end">Contract end</MenuItem>
                 </Select>
+                {showErrors && !formData.atoReason && (
+                  <Typography sx={{ color: '#AF1105', fontSize: '14px', mt: 1 }}>
+                    Please select an ATO reason
+                  </Typography>
+                )}
               </Box>
 
               <Box>
@@ -241,7 +281,7 @@ const OffboardingFlow: React.FC = () => {
                     control={
                       <Radio 
                         sx={{
-                          color: '#E5E7EB',
+                          color: showErrors && !formData.sentiment ? '#AF1105' : '#E5E7EB',
                           '&.Mui-checked': {
                             color: '#3D1CBA',
                           },
@@ -261,7 +301,7 @@ const OffboardingFlow: React.FC = () => {
                     control={
                       <Radio 
                         sx={{
-                          color: '#E5E7EB',
+                          color: showErrors && !formData.sentiment ? '#AF1105' : '#E5E7EB',
                           '&.Mui-checked': {
                             color: '#3D1CBA',
                           },
@@ -277,25 +317,34 @@ const OffboardingFlow: React.FC = () => {
                     }}
                   />
                 </RadioGroup>
+                {showErrors && !formData.sentiment && (
+                  <Typography sx={{ color: '#AF1105', fontSize: '14px', mt: 1 }}>
+                    Please select a sentiment
+                  </Typography>
+                )}
               </Box>
 
               <Box>
-                <Typography variant="subtitle1" gutterBottom sx={{ color: '#111827', fontSize: '14px', fontWeight: 500 }}>
-                  Comments
-                </Typography>
-                <Typography variant="body2" sx={{ mb: 1, color: '#6B7280', fontSize: '14px' }}>
-                  (optional)
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                  <Typography variant="subtitle1" sx={{ color: '#111827', fontSize: '14px', fontWeight: 500 }}>
+                    Comments
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#6B7280', fontSize: '14px' }}>
+                    (optional)
+                  </Typography>
+                </Box>
                 <TextField
                   fullWidth
                   multiline
-                  rows={4}
+                  rows={3}
                   placeholder="Add any additional information"
                   value={formData.comments}
                   onChange={handleTextChange('comments')}
                   sx={{
+                    width: '300px',
                     '& .MuiOutlinedInput-root': {
                       fontSize: '14px',
+                      height: '84px',
                       '& .MuiOutlinedInput-notchedOutline': {
                         borderColor: '#E5E7EB',
                       },
@@ -307,7 +356,7 @@ const OffboardingFlow: React.FC = () => {
                       },
                     },
                     '& .MuiOutlinedInput-input': {
-                      padding: '12px',
+                      padding: '12px 12px 12px 0',
                     },
                   }}
                 />
@@ -334,7 +383,8 @@ const OffboardingFlow: React.FC = () => {
                       '&.Mui-checked': {
                         color: '#3D1CBA',
                       },
-                      marginTop: '2px',
+                      mr: '8px',
+                      mt: '-6px',
                     }}
                   />
                 }
@@ -355,6 +405,7 @@ const OffboardingFlow: React.FC = () => {
                   border: '1px solid',
                   borderColor: formData.archiveOption === 'immediately' ? '#3D1CBA' : '#E5E7EB',
                   borderRadius: '8px',
+                  width: '600px',
                   '&:hover': {
                     backgroundColor: 'rgba(99, 102, 241, 0.04)',
                   },
@@ -372,7 +423,8 @@ const OffboardingFlow: React.FC = () => {
                       '&.Mui-checked': {
                         color: '#3D1CBA',
                       },
-                      marginTop: '2px',
+                      mr: '8px',
+                      mt: '-6px',
                     }}
                   />
                 }
@@ -382,18 +434,18 @@ const OffboardingFlow: React.FC = () => {
                       On last day of employment
                     </Typography>
                     <Typography sx={{ color: '#6B7280', fontSize: '14px', mt: 0.5 }}>
-                      If all outstanding items are complete, Michaella will be archived on their final day of employment - {formData.lastWorkingDate ? formData.lastWorkingDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Not set'}
+                      If all outstanding items are complete, Michaella will be archived on their final day of employment - {formData.lastWorkingDate ? formData.lastWorkingDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Not set'} at 11:00pm
                     </Typography>
                   </Box>
                 }
                 sx={{ 
                   alignItems: 'flex-start',
                   margin: 0,
-                  marginTop: '12px',
                   padding: '16px',
                   border: '1px solid',
                   borderColor: formData.archiveOption === 'lastDay' ? '#3D1CBA' : '#E5E7EB',
                   borderRadius: '8px',
+                  width: '600px',
                   '&:hover': {
                     backgroundColor: 'rgba(99, 102, 241, 0.04)',
                   },
@@ -411,23 +463,26 @@ const OffboardingFlow: React.FC = () => {
                       '&.Mui-checked': {
                         color: '#3D1CBA',
                       },
-                      marginTop: '2px',
+                      mr: '8px',
+                      mt: '-6px',
                     }}
                   />
                 }
                 label={
-                  <Typography sx={{ color: '#111827', fontSize: '14px', fontWeight: 500, lineHeight: '20px' }}>
-                    I will do this manually
-                  </Typography>
+                  <Box>
+                    <Typography sx={{ color: '#111827', fontSize: '14px', fontWeight: 500, lineHeight: '20px' }}>
+                      I will do this manually
+                    </Typography>
+                  </Box>
                 }
                 sx={{ 
                   alignItems: 'flex-start',
                   margin: 0,
-                  marginTop: '12px',
                   padding: '16px',
                   border: '1px solid',
                   borderColor: formData.archiveOption === 'manual' ? '#3D1CBA' : '#E5E7EB',
                   borderRadius: '8px',
+                  width: '600px',
                   '&:hover': {
                     backgroundColor: 'rgba(99, 102, 241, 0.04)',
                   },
@@ -589,7 +644,7 @@ const OffboardingFlow: React.FC = () => {
                 px: 4,
               }}
             >
-              Back
+              {step === 0 ? 'Cancel' : 'Back'}
             </Button>
             <Button
               variant="contained"
