@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -16,12 +16,10 @@ type ContextType = {
 };
 
 const AccountSecurity: React.FC = () => {
-  const navigate = useNavigate();
   const { onMfaComplete, showMfaError } = useOutletContext<ContextType>();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isRecoveryModalOpen, setIsRecoveryModalOpen] = useState(false);
   const [isMFAEnabled, setIsMFAEnabled] = useState(false);
-  const [isAuthenticatorSetup, setIsAuthenticatorSetup] = useState(false);
 
   const handleMFAStatusChange = (isEnabled: boolean) => {
     setIsMFAEnabled(isEnabled);
@@ -32,7 +30,7 @@ const AccountSecurity: React.FC = () => {
 
   useEffect(() => {
     handleMFAStatusChange(isMFAEnabled);
-  }, [isMFAEnabled]);
+  }, [isMFAEnabled, handleMFAStatusChange]);
 
   const handleAuthSetup = () => {
     setIsAuthModalOpen(true);
@@ -43,7 +41,6 @@ const AccountSecurity: React.FC = () => {
   };
 
   const handleAuthComplete = () => {
-    setIsAuthenticatorSetup(true);
     setIsAuthModalOpen(false);
     setIsRecoveryModalOpen(true);
   };

@@ -18,6 +18,10 @@ const WelcomeScreen: React.FC = () => {
     navigate('/setup/business-details');
   };
 
+  const handleOffboard = () => {
+    navigate('/offboarding/details');
+  };
+
   return (
     <Box sx={{ bgcolor: 'white', minHeight: '100vh', py: 8 }}>
       <Container maxWidth="lg">
@@ -48,22 +52,40 @@ const WelcomeScreen: React.FC = () => {
             Turn Deputy into your all-in-one solution with our new single touch payroll
           </Typography>
 
-          <Button
-            variant="contained"
-            onClick={handleGetStarted}
-            sx={{
-              mt: 4,
-              px: 4,
-              py: 1.5,
-              borderRadius: '8px',
-              backgroundColor: '#3D1CBA',
-              '&:hover': {
-                backgroundColor: '#2F1590',
-              },
-            }}
-          >
-            Get started
-          </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 4 }}>
+            <Button
+              variant="contained"
+              onClick={handleGetStarted}
+              sx={{
+                px: 4,
+                py: 1.5,
+                borderRadius: '8px',
+                backgroundColor: '#3D1CBA',
+                '&:hover': {
+                  backgroundColor: '#2F1590',
+                },
+              }}
+            >
+              Get started
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={handleOffboard}
+              sx={{
+                px: 4,
+                py: 1.5,
+                borderRadius: '8px',
+                borderColor: '#E5E7EB',
+                color: '#374151',
+                '&:hover': {
+                  borderColor: '#D1D5DB',
+                  backgroundColor: '#F9FAFB',
+                },
+              }}
+            >
+              Offboard employee
+            </Button>
+          </Box>
         </Box>
 
         <Box sx={{ position: 'relative', mb: 8 }}>

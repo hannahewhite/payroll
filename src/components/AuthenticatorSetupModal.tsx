@@ -23,7 +23,6 @@ const AuthenticatorSetupModal: React.FC<AuthenticatorSetupModalProps> = ({ open,
   const [verificationCode, setVerificationCode] = useState('');
   const [verificationError, setVerificationError] = useState(false);
   const [verificationSuccess, setVerificationSuccess] = useState(false);
-  const [step, setStep] = useState('download');
 
   const handleFinish = () => {
     const cleanCode = verificationCode.replace(/\s/g, '');
@@ -43,7 +42,6 @@ const AuthenticatorSetupModal: React.FC<AuthenticatorSetupModalProps> = ({ open,
     setVerificationCode('');
     setVerificationError(false);
     setVerificationSuccess(false);
-    setStep('download');
   };
 
   return (

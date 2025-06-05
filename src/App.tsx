@@ -10,6 +10,7 @@ import PayCalendars from './components/PayCalendars';
 import AccountSecurity from './components/AccountSecurity';
 import SetupLayout from './components/SetupLayout';
 import PayrunDetailsPage from './components/PayrunDetailsPage';
+import OffboardingFlow from './components/OffboardingFlow';
 import theme from './theme';
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
               <Route path="pay-calendars" element={<PayCalendars />} />
               <Route path="account-security" element={<AccountSecurity />} />
             </Route>
+            <Route path="/offboarding/*" element={<OffboardingFlow />} />
           </Routes>
         </Box>
       </ThemeProvider>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import {
   Box,
   Typography,
@@ -10,16 +10,32 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  SelectChangeEvent,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 import OffboardingStepper from './OffboardingStepper';
+import UpcomingShifts from './UpcomingShifts';
+import Review from './Review';
+
+interface FormData {
+  terminationDate: Date | null;
+  lastWorkingDate: Date | null;
+  reasonForLeaving: string;
+  atoReason: string;
+  sentiment: string;
+  comments: string;
+  archiveOption: string;
+  archiveTime: string;
+}
 
 const OffboardingFlow: React.FC = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
-  const [formData, setFormData] = useState({
-    terminationDate: '',
-    lastWorkingDate: '',
+  const [formData, setFormData] = useState<FormData>({
+    terminationDate: null,
+    lastWorkingDate: null,
     reasonForLeaving: '',
     atoReason: '',
     sentiment: '',
@@ -40,6 +56,28 @@ const OffboardingFlow: React.FC = () => {
     }
   };
 
+  const handleDateChange = (field: keyof Pick<FormData, 'terminationDate' | 'lastWorkingDate'>) => (date: Date | null) => {
+    setFormData({ ...formData, [field]: date });
+  };
+
+  const handleSelectChange = (field: keyof Pick<FormData, 'reasonForLeaving' | 'atoReason' | 'archiveTime'>) => (
+    event: SelectChangeEvent<string>
+  ) => {
+    setFormData({ ...formData, [field]: event.target.value });
+  };
+
+  const handleRadioChange = (field: keyof Pick<FormData, 'sentiment' | 'archiveOption'>) => (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    setFormData({ ...formData, [field]: event.target.value });
+  };
+
+  const handleTextChange = (field: keyof Pick<FormData, 'comments'>) => (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData({ ...formData, [field]: event.target.value });
+  };
+
   const renderStepContent = () => {
     switch (step) {
       case 0:
@@ -57,30 +95,29 @@ const OffboardingFlow: React.FC = () => {
                 <Typography variant="body2" sx={{ mb: 1, color: '#6B7280', fontSize: '14px' }}>
                   When the employee handed in their resignation
                 </Typography>
-                <Select
-                  fullWidth
-                  value={formData.terminationDate}
-                  onChange={(e) => setFormData({ ...formData, terminationDate: e.target.value })}
-                  displayEmpty
-                  sx={{
-                    height: '32px',
-                    '& .MuiSelect-select': {
-                      padding: '6px 12px',
-                      fontSize: '14px',
-                    },
-                    '& .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#E5E7EB',
-                    },
-                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#D1D5DB',
-                    },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#3D1CBA',
-                    },
-                  }}
-                >
-                  <MenuItem value="" disabled>Select</MenuItem>
-                </Select>
+                <DatePicker
+                  selected={formData.terminationDate}
+                  onChange={handleDateChange('terminationDate')}
+                  dateFormat="dd MMM yyyy"
+                  placeholderText="Select date"
+                  className="custom-datepicker"
+                  wrapperClassName="custom-datepicker-wrapper"
+                  customInput={
+                    <input
+                      style={{
+                        height: '32px',
+                        width: '300px',
+                        padding: '6px 12px',
+                        fontSize: '14px',
+                        fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
+                        border: '1px solid #E5E7EB',
+                        borderRadius: '8px',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  }
+                />
               </Box>
 
               <Box>
@@ -90,30 +127,29 @@ const OffboardingFlow: React.FC = () => {
                 <Typography variant="body2" sx={{ mb: 1, color: '#6B7280', fontSize: '14px' }}>
                   When the employee will finish up at the company
                 </Typography>
-                <Select
-                  fullWidth
-                  value={formData.lastWorkingDate}
-                  onChange={(e) => setFormData({ ...formData, lastWorkingDate: e.target.value })}
-                  displayEmpty
-                  sx={{
-                    height: '32px',
-                    '& .MuiSelect-select': {
-                      padding: '6px 12px',
-                      fontSize: '14px',
-                    },
-                    '& .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#E5E7EB',
-                    },
-                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#D1D5DB',
-                    },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#3D1CBA',
-                    },
-                  }}
-                >
-                  <MenuItem value="" disabled>Select</MenuItem>
-                </Select>
+                <DatePicker
+                  selected={formData.lastWorkingDate}
+                  onChange={handleDateChange('lastWorkingDate')}
+                  dateFormat="dd MMM yyyy"
+                  placeholderText="Select date"
+                  className="custom-datepicker"
+                  wrapperClassName="custom-datepicker-wrapper"
+                  customInput={
+                    <input
+                      style={{
+                        height: '32px',
+                        width: '300px',
+                        padding: '6px 12px',
+                        fontSize: '14px',
+                        fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
+                        border: '1px solid #E5E7EB',
+                        borderRadius: '8px',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  }
+                />
               </Box>
 
               <Box>
@@ -123,10 +159,11 @@ const OffboardingFlow: React.FC = () => {
                 <Select
                   fullWidth
                   value={formData.reasonForLeaving}
-                  onChange={(e) => setFormData({ ...formData, reasonForLeaving: e.target.value })}
+                  onChange={handleSelectChange('reasonForLeaving')}
                   displayEmpty
                   sx={{
                     height: '32px',
+                    width: '300px',
                     '& .MuiSelect-select': {
                       padding: '6px 12px',
                       fontSize: '14px',
@@ -158,10 +195,11 @@ const OffboardingFlow: React.FC = () => {
                 <Select
                   fullWidth
                   value={formData.atoReason}
-                  onChange={(e) => setFormData({ ...formData, atoReason: e.target.value })}
+                  onChange={handleSelectChange('atoReason')}
                   displayEmpty
                   sx={{
                     height: '32px',
+                    width: '300px',
                     '& .MuiSelect-select': {
                       padding: '6px 12px',
                       fontSize: '14px',
@@ -191,7 +229,7 @@ const OffboardingFlow: React.FC = () => {
                 </Typography>
                 <RadioGroup
                   value={formData.sentiment}
-                  onChange={(e) => setFormData({ ...formData, sentiment: e.target.value })}
+                  onChange={handleRadioChange('sentiment')}
                   sx={{
                     '& .MuiFormControlLabel-root': {
                       marginBottom: '4px',
@@ -254,7 +292,7 @@ const OffboardingFlow: React.FC = () => {
                   rows={4}
                   placeholder="Add any additional information"
                   value={formData.comments}
-                  onChange={(e) => setFormData({ ...formData, comments: e.target.value })}
+                  onChange={handleTextChange('comments')}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       fontSize: '14px',
@@ -284,116 +322,117 @@ const OffboardingFlow: React.FC = () => {
               Select when you want to archive employee
             </Typography>
 
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-              <Box>
-                <FormControlLabel
-                  value="immediately"
-                  control={
-                    <Radio 
-                      checked={formData.archiveOption === 'immediately'}
-                      onChange={(e) => setFormData({ ...formData, archiveOption: 'immediately' })}
-                      sx={{
-                        color: '#E5E7EB',
-                        '&.Mui-checked': {
-                          color: '#3D1CBA',
-                        },
-                      }}
-                    />
-                  }
-                  label={
-                    <Box>
-                      <Typography sx={{ color: '#111827', fontSize: '14px', fontWeight: 500 }}>
-                        Immediately
-                      </Typography>
-                      <Typography sx={{ color: '#6B7280', fontSize: '14px', mt: 0.5 }}>
-                        Michaella will be archived as soon as this flow is completed
-                      </Typography>
-                    </Box>
-                  }
-                  sx={{ 
-                    alignItems: 'flex-start',
-                    margin: 0,
-                    padding: '16px',
-                    border: '1px solid',
-                    borderColor: formData.archiveOption === 'immediately' ? '#3D1CBA' : '#E5E7EB',
-                    borderRadius: '8px',
-                    '&:hover': {
-                      backgroundColor: 'rgba(99, 102, 241, 0.04)',
-                    },
-                  }}
-                />
-
-                <FormControlLabel
-                  value="lastDay"
-                  control={
-                    <Radio 
-                      checked={formData.archiveOption === 'lastDay'}
-                      onChange={(e) => setFormData({ ...formData, archiveOption: 'lastDay' })}
-                      sx={{
-                        color: '#E5E7EB',
-                        '&.Mui-checked': {
-                          color: '#3D1CBA',
-                        },
-                      }}
-                    />
-                  }
-                  label={
-                    <Box>
-                      <Typography sx={{ color: '#111827', fontSize: '14px', fontWeight: 500 }}>
-                        On last day of employment
-                      </Typography>
-                      <Typography sx={{ color: '#6B7280', fontSize: '14px', mt: 0.5 }}>
-                        If all outstanding items are complete, Michaella will be archived on their final day of employment - 27 May 2025
-                      </Typography>
-                    </Box>
-                  }
-                  sx={{ 
-                    alignItems: 'flex-start',
-                    margin: 0,
-                    marginTop: 2,
-                    padding: '16px',
-                    border: '1px solid',
-                    borderColor: formData.archiveOption === 'lastDay' ? '#3D1CBA' : '#E5E7EB',
-                    borderRadius: '8px',
-                    '&:hover': {
-                      backgroundColor: 'rgba(99, 102, 241, 0.04)',
-                    },
-                  }}
-                />
-
-                <FormControlLabel
-                  value="manual"
-                  control={
-                    <Radio 
-                      checked={formData.archiveOption === 'manual'}
-                      onChange={(e) => setFormData({ ...formData, archiveOption: 'manual' })}
-                      sx={{
-                        color: '#E5E7EB',
-                        '&.Mui-checked': {
-                          color: '#3D1CBA',
-                        },
-                      }}
-                    />
-                  }
-                  label={
-                    <Typography sx={{ color: '#111827', fontSize: '14px', fontWeight: 500 }}>
-                      I will do this manually
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <FormControlLabel
+                value="immediately"
+                control={
+                  <Radio 
+                    checked={formData.archiveOption === 'immediately'}
+                    onChange={handleRadioChange('archiveOption')}
+                    sx={{
+                      color: '#E5E7EB',
+                      '&.Mui-checked': {
+                        color: '#3D1CBA',
+                      },
+                      marginTop: '2px',
+                    }}
+                  />
+                }
+                label={
+                  <Box>
+                    <Typography sx={{ color: '#111827', fontSize: '14px', fontWeight: 500, lineHeight: '20px' }}>
+                      Immediately
                     </Typography>
-                  }
-                  sx={{ 
-                    alignItems: 'center',
-                    margin: 0,
-                    marginTop: 2,
-                    padding: '16px',
-                    border: '1px solid',
-                    borderColor: formData.archiveOption === 'manual' ? '#3D1CBA' : '#E5E7EB',
-                    borderRadius: '8px',
-                    '&:hover': {
-                      backgroundColor: 'rgba(99, 102, 241, 0.04)',
-                    },
-                  }}
-                />
-              </Box>
+                    <Typography sx={{ color: '#6B7280', fontSize: '14px', mt: 0.5 }}>
+                      Michaella will be archived as soon as this flow is completed
+                    </Typography>
+                  </Box>
+                }
+                sx={{ 
+                  alignItems: 'flex-start',
+                  margin: 0,
+                  padding: '16px',
+                  border: '1px solid',
+                  borderColor: formData.archiveOption === 'immediately' ? '#3D1CBA' : '#E5E7EB',
+                  borderRadius: '8px',
+                  '&:hover': {
+                    backgroundColor: 'rgba(99, 102, 241, 0.04)',
+                  },
+                }}
+              />
+
+              <FormControlLabel
+                value="lastDay"
+                control={
+                  <Radio 
+                    checked={formData.archiveOption === 'lastDay'}
+                    onChange={handleRadioChange('archiveOption')}
+                    sx={{
+                      color: '#E5E7EB',
+                      '&.Mui-checked': {
+                        color: '#3D1CBA',
+                      },
+                      marginTop: '2px',
+                    }}
+                  />
+                }
+                label={
+                  <Box>
+                    <Typography sx={{ color: '#111827', fontSize: '14px', fontWeight: 500, lineHeight: '20px' }}>
+                      On last day of employment
+                    </Typography>
+                    <Typography sx={{ color: '#6B7280', fontSize: '14px', mt: 0.5 }}>
+                      If all outstanding items are complete, Michaella will be archived on their final day of employment - {formData.lastWorkingDate ? formData.lastWorkingDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Not set'}
+                    </Typography>
+                  </Box>
+                }
+                sx={{ 
+                  alignItems: 'flex-start',
+                  margin: 0,
+                  marginTop: '12px',
+                  padding: '16px',
+                  border: '1px solid',
+                  borderColor: formData.archiveOption === 'lastDay' ? '#3D1CBA' : '#E5E7EB',
+                  borderRadius: '8px',
+                  '&:hover': {
+                    backgroundColor: 'rgba(99, 102, 241, 0.04)',
+                  },
+                }}
+              />
+
+              <FormControlLabel
+                value="manual"
+                control={
+                  <Radio 
+                    checked={formData.archiveOption === 'manual'}
+                    onChange={handleRadioChange('archiveOption')}
+                    sx={{
+                      color: '#E5E7EB',
+                      '&.Mui-checked': {
+                        color: '#3D1CBA',
+                      },
+                      marginTop: '2px',
+                    }}
+                  />
+                }
+                label={
+                  <Typography sx={{ color: '#111827', fontSize: '14px', fontWeight: 500, lineHeight: '20px' }}>
+                    I will do this manually
+                  </Typography>
+                }
+                sx={{ 
+                  alignItems: 'flex-start',
+                  margin: 0,
+                  marginTop: '12px',
+                  padding: '16px',
+                  border: '1px solid',
+                  borderColor: formData.archiveOption === 'manual' ? '#3D1CBA' : '#E5E7EB',
+                  borderRadius: '8px',
+                  '&:hover': {
+                    backgroundColor: 'rgba(99, 102, 241, 0.04)',
+                  },
+                }}
+              />
 
               {(formData.archiveOption === 'immediately' || formData.archiveOption === 'lastDay') && (
                 <Box>
@@ -403,7 +442,7 @@ const OffboardingFlow: React.FC = () => {
                   <Select
                     fullWidth
                     value={formData.archiveTime}
-                    onChange={(e) => setFormData({ ...formData, archiveTime: e.target.value })}
+                    onChange={handleSelectChange('archiveTime')}
                     sx={{
                       height: '32px',
                       '& .MuiSelect-select': {
@@ -428,6 +467,23 @@ const OffboardingFlow: React.FC = () => {
               )}
             </Box>
           </Box>
+        );
+      case 2:
+        return <UpcomingShifts onNext={handleNext} onBack={handleBack} />;
+      case 3:
+        return (
+          <Review
+            firstName="Michaella"
+            terminationDate={formData.terminationDate ? new Date(formData.terminationDate).toLocaleDateString() : '7 Apr 2025'}
+            lastWorkingDate={formData.lastWorkingDate ? new Date(formData.lastWorkingDate).toLocaleDateString() : '27 May 2025'}
+            reasonForLeaving={formData.reasonForLeaving || 'Resigned'}
+            atoReason={formData.atoReason || 'Voluntary cessation'}
+            sentiment={formData.sentiment || 'Regrettable'}
+            comments={formData.comments || 'Going for a lap around Australia'}
+            upcomingShifts={2}
+            pendingTimesheets={15}
+            unprocessedPayRuns={2}
+          />
         );
       default:
         return null;

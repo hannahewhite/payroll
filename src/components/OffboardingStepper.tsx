@@ -16,8 +16,8 @@ const CustomConnector = styled(StepConnector)(({ theme }) => ({
 const steps = [
   { label: 'Offboarding details', path: 'offboarding-details' },
   { label: 'Archive date', path: 'archive-date' },
-  { label: 'Outstanding items', path: 'outstanding-items' },
-  { label: 'Review', path: 'review' },
+  { label: 'Upcoming shifts', path: 'upcoming-shifts' },
+  { label: 'Review', path: 'review' }
 ];
 
 interface OffboardingStepperProps {
