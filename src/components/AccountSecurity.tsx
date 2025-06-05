@@ -7,8 +7,8 @@ import {
   FormHelperText,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import MFASetupModal from './MFASetupModal';
 import AuthenticatorSetupModal from './AuthenticatorSetupModal';
+import RecoveryCodeModal from './RecoveryCodeModal';
 
 type ContextType = {
   onMfaComplete: () => void;
@@ -18,10 +18,9 @@ type ContextType = {
 const AccountSecurity: React.FC = () => {
   const navigate = useNavigate();
   const { onMfaComplete, showMfaError } = useOutletContext<ContextType>();
-  const [isMFAModalOpen, setIsMFAModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isRecoveryModalOpen, setIsRecoveryModalOpen] = useState(false);
   const [isMFAEnabled, setIsMFAEnabled] = useState(false);
-  const [isSMSVerified, setIsSMSVerified] = useState(false);
   const [isAuthenticatorSetup, setIsAuthenticatorSetup] = useState(false);
 
   const handleMFAStatusChange = (isEnabled: boolean) => {
@@ -35,20 +34,6 @@ const AccountSecurity: React.FC = () => {
     handleMFAStatusChange(isMFAEnabled);
   }, [isMFAEnabled]);
 
-  const handleMFASetup = () => {
-    setIsMFAModalOpen(true);
-  };
-
-  const handleMFAModalClose = () => {
-    setIsMFAModalOpen(false);
-  };
-
-  const handleMFAComplete = () => {
-    setIsSMSVerified(true);
-    setIsMFAModalOpen(false);
-    setIsMFAEnabled(true);
-  };
-
   const handleAuthSetup = () => {
     setIsAuthModalOpen(true);
   };
@@ -60,6 +45,16 @@ const AccountSecurity: React.FC = () => {
   const handleAuthComplete = () => {
     setIsAuthenticatorSetup(true);
     setIsAuthModalOpen(false);
+    setIsRecoveryModalOpen(true);
+  };
+
+  const handleRecoveryModalClose = () => {
+    setIsRecoveryModalOpen(false);
+  };
+
+  const handleRecoveryComplete = () => {
+    setIsRecoveryModalOpen(false);
+    setIsMFAEnabled(true);
   };
 
   return (
@@ -115,147 +110,56 @@ const AccountSecurity: React.FC = () => {
                   fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
                 }}
               >
-                {isAuthenticatorSetup 
-                  ? "This can be managed in the account settings in your global profile."
-                  : "SMS verification is enabled. You can optionally set up an authenticator app as an additional security measure."}
+                This can be managed in the account settings in your global profile.
               </Typography>
             </Box>
           </Box>
-          {!isAuthenticatorSetup && (
-            <Button
-              variant="outlined"
-              onClick={handleAuthSetup}
-              sx={{
-                borderColor: '#E5E7EB',
-                color: '#374151',
-                '&:hover': {
-                  borderColor: '#6366F1',
-                  backgroundColor: 'rgba(99, 102, 241, 0.04)',
-                },
-                textTransform: 'none',
-                height: '36px',
-                alignSelf: 'flex-start'
-              }}
-            >
-              Set up authenticator app
-            </Button>
-          )}
         </>
       ) : (
         <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', gap: 2 }}>
-          {!isSMSVerified ? (
-            <>
-              <Button
-                variant="outlined"
-                onClick={handleMFASetup}
-                sx={{
-                  borderColor: '#E5E7EB',
-                  color: '#374151',
-                  '&:hover': {
-                    borderColor: '#6366F1',
-                    backgroundColor: 'rgba(99, 102, 241, 0.04)',
-                  },
-                  textTransform: 'none',
-                  height: '36px',
-                  alignSelf: 'flex-start'
-                }}
-              >
-                Set up
-              </Button>
-              {showMfaError && (
-                <FormHelperText 
-                  error 
-                  sx={{ 
-                    mt: 1,
-                    fontSize: '14px',
-                    color: '#C9150C',
-                    fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
-                  }}
-                >
-                  You must complete SMS verification before continuing
-                </FormHelperText>
-              )}
-            </>
-          ) : (
-            <>
-              <Box 
-                sx={{ 
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: 1.5,
-                  mb: 2,
-                  p: 2,
-                  backgroundColor: '#F4FBF7',
-                  borderRadius: '8px',
-                  border: '1px solid #8FCEA8',
-                }}
-              >
-                <CheckCircleIcon 
-                  sx={{ 
-                    color: '#30A46C',
-                    fontSize: 20,
-                    mt: '2px',
-                  }} 
-                />
-                <Box>
-                  <Typography
-                    sx={{
-                      color: '#232329',
-                      fontSize: '14px',
-                      fontWeight: 500,
-                      fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
-                    }}
-                  >
-                    SMS verification enabled
-                  </Typography>
-                  <Typography 
-                    variant="body2" 
-                    sx={{ 
-                      mt: 0.5,
-                      color: '#232329',
-                      opacity: 0.8,
-                      fontSize: '14px',
-                      fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
-                    }}
-                  >
-                    You can optionally set up an authenticator app as an additional security measure
-                  </Typography>
-                </Box>
-              </Box>
-              {!isAuthenticatorSetup && (
-                <Button
-                  variant="outlined"
-                  onClick={handleAuthSetup}
-                  sx={{
-                    borderColor: '#E5E7EB',
-                    color: '#374151',
-                    '&:hover': {
-                      borderColor: '#6366F1',
-                      backgroundColor: 'rgba(99, 102, 241, 0.04)',
-                    },
-                    textTransform: 'none',
-                    height: '36px',
-                    alignSelf: 'flex-start'
-                  }}
-                >
-                  Set up authenticator app
-                </Button>
-              )}
-            </>
+          <Button
+            variant="outlined"
+            onClick={handleAuthSetup}
+            sx={{
+              borderColor: '#E5E7EB',
+              color: '#374151',
+              '&:hover': {
+                borderColor: '#6366F1',
+                backgroundColor: 'rgba(99, 102, 241, 0.04)',
+              },
+              textTransform: 'none',
+              height: '36px',
+              alignSelf: 'flex-start'
+            }}
+          >
+            Set up
+          </Button>
+          {showMfaError && (
+            <FormHelperText 
+              error 
+              sx={{ 
+                mt: 1,
+                fontSize: '14px',
+                color: '#C9150C',
+                fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
+              }}
+            >
+              You must complete authenticator setup before continuing
+            </FormHelperText>
           )}
         </Box>
       )}
-
-      <MFASetupModal
-        open={isMFAModalOpen}
-        onClose={handleMFAModalClose}
-        onComplete={handleMFAComplete}
-      />
 
       <AuthenticatorSetupModal
         open={isAuthModalOpen}
         onClose={handleAuthModalClose}
         onComplete={handleAuthComplete}
+      />
+
+      <RecoveryCodeModal
+        open={isRecoveryModalOpen}
+        onClose={handleRecoveryModalClose}
+        onComplete={handleRecoveryComplete}
       />
     </Box>
   );
