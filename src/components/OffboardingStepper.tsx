@@ -8,7 +8,7 @@ const CustomConnector = styled(StepConnector)(({ theme }) => ({
   },
   [`& .${stepConnectorClasses.line}`]: {
     borderColor: '#E5E7EB',
-    borderLeftWidth: 2,
+    borderLeftWidth: 1,
     minHeight: 16,
   },
 }));

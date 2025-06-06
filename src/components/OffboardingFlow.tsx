@@ -20,6 +20,7 @@ import UpcomingShifts from './UpcomingShifts';
 import Review from './Review';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 
 interface FormData {
   terminationDate: Date | null;
@@ -29,6 +30,7 @@ interface FormData {
   sentiment: string;
   comments: string;
   archiveOption: string;
+  documentUrl?: string;
 }
 
 const OffboardingFlow: React.FC = () => {
@@ -43,6 +45,7 @@ const OffboardingFlow: React.FC = () => {
     sentiment: '',
     comments: '',
     archiveOption: '',
+    documentUrl: '',
   });
 
   const isFirstStepValid = () => {
@@ -65,13 +68,10 @@ const OffboardingFlow: React.FC = () => {
     }
     setStep(step + 1);
     // Scroll to top of content
-    const contentElement = document.querySelector('[role="main"]');
-    if (contentElement) {
-      contentElement.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    }
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
 
   const handleBack = () => {
@@ -80,13 +80,10 @@ const OffboardingFlow: React.FC = () => {
     } else {
       setStep(step - 1);
       // Scroll to top of content
-      const contentElement = document.querySelector('[role="main"]');
-      if (contentElement) {
-        contentElement.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-      }
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     }
   };
 
@@ -206,6 +203,20 @@ const OffboardingFlow: React.FC = () => {
                   onChange={handleSelectChange('reasonForLeaving')}
                   displayEmpty
                   error={showErrors && !formData.reasonForLeaving}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        borderRadius: '8px',
+                        boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.05), 0px 1px 2px rgba(0, 0, 0, 0.08)',
+                        '& .MuiMenuItem-root': {
+                          fontSize: '14px',
+                          '&:hover': {
+                            backgroundColor: '#F9F9FB',
+                          },
+                        },
+                      },
+                    },
+                  }}
                   sx={{
                     height: '32px',
                     width: '300px',
@@ -227,17 +238,17 @@ const OffboardingFlow: React.FC = () => {
                     },
                   }}
                 >
-                  <MenuItem value="" disabled>Select</MenuItem>
-                  <MenuItem value="compensation_benefits">Compensation and benefits</MenuItem>
-                  <MenuItem value="external_opportunities">External opportunities</MenuItem>
-                  <MenuItem value="lack_flexibility">Lack of flexibility</MenuItem>
-                  <MenuItem value="leadership_concerns">Leadership or management concerns</MenuItem>
-                  <MenuItem value="limited_progression">Limited career progression</MenuItem>
-                  <MenuItem value="organisational_changes">Organisational changes</MenuItem>
-                  <MenuItem value="performance_issues">Performance issues</MenuItem>
-                  <MenuItem value="role_misalignment">Role misalignment</MenuItem>
-                  <MenuItem value="workload_burnout">Workload or burnout</MenuItem>
-                  <MenuItem value="culture_misalignment">Workplace culture misalignment</MenuItem>
+                  <MenuItem value="" disabled sx={{ fontSize: '14px' }}>Select</MenuItem>
+                  <MenuItem value="compensation_benefits" sx={{ fontSize: '14px' }}>Compensation and benefits</MenuItem>
+                  <MenuItem value="external_opportunities" sx={{ fontSize: '14px' }}>External opportunities</MenuItem>
+                  <MenuItem value="lack_flexibility" sx={{ fontSize: '14px' }}>Lack of flexibility</MenuItem>
+                  <MenuItem value="leadership_concerns" sx={{ fontSize: '14px' }}>Leadership or management concerns</MenuItem>
+                  <MenuItem value="limited_progression" sx={{ fontSize: '14px' }}>Limited career progression</MenuItem>
+                  <MenuItem value="organisational_changes" sx={{ fontSize: '14px' }}>Organisational changes</MenuItem>
+                  <MenuItem value="performance_issues" sx={{ fontSize: '14px' }}>Performance issues</MenuItem>
+                  <MenuItem value="role_misalignment" sx={{ fontSize: '14px' }}>Role misalignment</MenuItem>
+                  <MenuItem value="workload_burnout" sx={{ fontSize: '14px' }}>Workload or burnout</MenuItem>
+                  <MenuItem value="culture_misalignment" sx={{ fontSize: '14px' }}>Workplace culture misalignment</MenuItem>
                 </Select>
                 {showErrors && !formData.reasonForLeaving && (
                   <Typography sx={{ color: '#AF1105', fontSize: '14px', mt: 1 }}>
@@ -256,6 +267,20 @@ const OffboardingFlow: React.FC = () => {
                   onChange={handleSelectChange('atoReason')}
                   displayEmpty
                   error={showErrors && !formData.atoReason}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        borderRadius: '8px',
+                        boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.05), 0px 1px 2px rgba(0, 0, 0, 0.08)',
+                        '& .MuiMenuItem-root': {
+                          fontSize: '14px',
+                          '&:hover': {
+                            backgroundColor: '#F9F9FB',
+                          },
+                        },
+                      },
+                    },
+                  }}
                   sx={{
                     height: '32px',
                     width: '300px',
@@ -277,11 +302,11 @@ const OffboardingFlow: React.FC = () => {
                     },
                   }}
                 >
-                  <MenuItem value="" disabled>Select</MenuItem>
-                  <MenuItem value="voluntary">Voluntary cessation</MenuItem>
-                  <MenuItem value="redundancy">Redundancy</MenuItem>
-                  <MenuItem value="dismissal">Dismissal</MenuItem>
-                  <MenuItem value="contract_end">Contract end</MenuItem>
+                  <MenuItem value="" disabled sx={{ fontSize: '14px' }}>Select</MenuItem>
+                  <MenuItem value="voluntary" sx={{ fontSize: '14px' }}>Voluntary cessation</MenuItem>
+                  <MenuItem value="redundancy" sx={{ fontSize: '14px' }}>Redundancy</MenuItem>
+                  <MenuItem value="dismissal" sx={{ fontSize: '14px' }}>Dismissal</MenuItem>
+                  <MenuItem value="contract_end" sx={{ fontSize: '14px' }}>Contract end</MenuItem>
                 </Select>
                 {showErrors && !formData.atoReason && (
                   <Typography sx={{ color: '#AF1105', fontSize: '14px', mt: 1 }}>
@@ -349,6 +374,93 @@ const OffboardingFlow: React.FC = () => {
                     Please select a sentiment
                   </Typography>
                 )}
+              </Box>
+
+              <Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                  <Typography variant="subtitle1" sx={{ color: '#111827', fontSize: '14px', fontWeight: 500 }}>
+                    Supporting document
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#6B7280', fontSize: '14px' }}>
+                    (optional)
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  {formData.documentUrl ? (
+                    <>
+                      <Typography sx={{ 
+                        color: '#111827', 
+                        fontSize: '14px',
+                        mr: 2
+                      }}>
+                        Document uploaded
+                      </Typography>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        startIcon={<AttachFileIcon />}
+                        onClick={() => window.open(formData.documentUrl, '_blank')}
+                        sx={{
+                          color: '#374151',
+                          borderColor: '#E5E7EB',
+                          height: '32px',
+                          '&:hover': {
+                            backgroundColor: 'rgba(99, 102, 241, 0.04)',
+                            borderColor: '#6366F1',
+                          },
+                        }}
+                      >
+                        View document
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() => setFormData({ ...formData, documentUrl: '' })}
+                        sx={{
+                          color: '#374151',
+                          borderColor: '#E5E7EB',
+                          height: '32px',
+                          '&:hover': {
+                            backgroundColor: 'rgba(99, 102, 241, 0.04)',
+                            borderColor: '#6366F1',
+                          },
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </>
+                  ) : (
+                    <Button
+                      component="label"
+                      variant="outlined"
+                      size="small"
+                      startIcon={<AttachFileIcon />}
+                      sx={{
+                        color: '#374151',
+                        borderColor: '#E5E7EB',
+                        height: '32px',
+                        '&:hover': {
+                          backgroundColor: 'rgba(99, 102, 241, 0.04)',
+                          borderColor: '#6366F1',
+                        },
+                      }}
+                    >
+                      Upload document
+                      <input
+                        type="file"
+                        hidden
+                        onChange={(e) => {
+                          if (e.target.files?.[0]) {
+                            // Here you would typically upload the file to your server
+                            // and get back a URL. For now, we'll create a fake URL
+                            const fakeUrl = URL.createObjectURL(e.target.files[0]);
+                            setFormData({ ...formData, documentUrl: fakeUrl });
+                          }
+                        }}
+                      />
+                    </Button>
+                  )}
+                </Box>
               </Box>
 
               <Box>
@@ -519,26 +631,26 @@ const OffboardingFlow: React.FC = () => {
           </Box>
         );
       case 2:
-        console.log('Archive option:', formData.archiveOption);
-        console.log('Should disable next:', formData.archiveOption === 'immediately');
         return <UpcomingShifts 
           onNext={handleNext} 
           onBack={handleBack} 
-          disableNext={formData.archiveOption === 'immediately'} 
+          disableNext={true} 
         />;
       case 3:
         return (
           <Review
             firstName="Michaella"
-            terminationDate={formData.terminationDate ? new Date(formData.terminationDate).toLocaleDateString() : '7 Apr 2025'}
-            lastWorkingDate={formData.lastWorkingDate ? new Date(formData.lastWorkingDate).toLocaleDateString() : '27 May 2025'}
-            reasonForLeaving={formData.reasonForLeaving || 'Resigned'}
-            atoReason={formData.atoReason || 'Voluntary cessation'}
-            sentiment={formData.sentiment || 'Regrettable'}
-            comments={formData.comments || 'Going for a lap around Australia'}
+            terminationDate={formData.terminationDate ? formData.terminationDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '7 Apr 2025'}
+            lastWorkingDate={formData.lastWorkingDate ? formData.lastWorkingDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '27 May 2025'}
+            reasonForLeaving={formData.reasonForLeaving || 'resigned'}
+            atoReason={formData.atoReason || 'voluntary_cessation'}
+            sentiment={formData.sentiment || 'regrettable'}
+            comments={formData.comments}
             upcomingShifts={2}
             pendingTimesheets={15}
             unprocessedPayRuns={2}
+            documentUrl={formData.documentUrl}
+            archiveOption={formData.archiveOption}
           />
         );
       default:
@@ -651,7 +763,7 @@ const OffboardingFlow: React.FC = () => {
               >
                 {step === 0 ? 'Cancel' : 'Back'}
               </Button>
-              {(step === 1 || step === 2) && (
+              {step > 0 && (
                 <Button
                   variant="text"
                   onClick={() => navigate('/')}
@@ -671,18 +783,23 @@ const OffboardingFlow: React.FC = () => {
             <Button
               variant="contained"
               onClick={handleNext}
-              endIcon={<ArrowForwardIcon />}
+              endIcon={step !== 3 ? <ArrowForwardIcon /> : null}
+              disabled={step === 2 && formData.archiveOption === 'immediately'}
               sx={{
-                bgcolor: '#3D1CBA',
-                color: '#FFFFFF',
+                bgcolor: step === 2 && formData.archiveOption === 'immediately' ? '#E5E7EB' : '#3D1CBA',
+                color: step === 2 && formData.archiveOption === 'immediately' ? '#9CA3AF' : '#FFFFFF',
                 '&:hover': {
-                  bgcolor: '#3019A0',
+                  bgcolor: step === 2 && formData.archiveOption === 'immediately' ? '#E5E7EB' : '#3019A0',
+                },
+                '&.Mui-disabled': {
+                  bgcolor: '#E5E7EB',
+                  color: '#9CA3AF',
                 },
                 height: '36px',
                 px: 4,
               }}
             >
-              {step === 3 ? 'Finish' : 'Next'}
+              {step === 3 ? 'Confirm details' : 'Next'}
             </Button>
           </Box>
         </Box>

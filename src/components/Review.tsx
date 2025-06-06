@@ -4,8 +4,10 @@ import {
   Typography,
   Alert,
   Button,
+  IconButton,
 } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import WarningIcon from '@mui/icons-material/Warning';
 
 interface ReviewProps {
   firstName: string;
@@ -18,6 +20,8 @@ interface ReviewProps {
   upcomingShifts: number;
   pendingTimesheets: number;
   unprocessedPayRuns: number;
+  documentUrl?: string;
+  archiveOption: string;
 }
 
 const Review: React.FC<ReviewProps> = ({
@@ -27,11 +31,30 @@ const Review: React.FC<ReviewProps> = ({
   reasonForLeaving = 'Resigned',
   atoReason = 'Voluntary cessation',
   sentiment = 'Regrettable',
-  comments = 'Going for a lap around Australia',
+  comments = '',
   upcomingShifts = 2,
   pendingTimesheets = 15,
   unprocessedPayRuns = 2,
+  documentUrl,
+  archiveOption = '',
 }) => {
+  // Helper function to format date
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
+
+  const formatValue = (value: string) => {
+    return value
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
   const DetailRow = ({ label, value, isDate }: { label: string; value: string; isDate?: boolean }) => (
     <Box sx={{ 
       display: 'flex', 
@@ -52,9 +75,10 @@ const Review: React.FC<ReviewProps> = ({
         color: '#111827', 
         flex: 1,
         fontSize: '14px',
-        fontFamily: isDate ? '-apple-system, "SF Pro", "SF Pro Display"' : 'inherit'
+        fontFamily: isDate ? '-apple-system, "SF Pro", "SF Pro Display"' : 'inherit',
+        fontStyle: !value ? 'italic' : 'normal'
       }}>
-        {value}
+        {isDate ? formatDate(value) : (label === "Reason for leaving" || label === "ATO reason" || label === "Sentiment") ? formatValue(value) : value || ''}
       </Typography>
     </Box>
   );
@@ -63,12 +87,14 @@ const Review: React.FC<ReviewProps> = ({
     label, 
     value, 
     buttonText, 
-    onClick 
+    onClick,
+    isUpcomingShift = false
   }: { 
     label: string; 
     value: string; 
     buttonText: string;
     onClick: () => void;
+    isUpcomingShift?: boolean;
   }) => (
     <Box sx={{ 
       display: 'flex', 
@@ -82,14 +108,14 @@ const Review: React.FC<ReviewProps> = ({
       <Box sx={{ 
         display: 'flex',
         alignItems: 'center',
-        flex: 1,
+        width: '300px',
         gap: 2
       }}>
         <Box sx={{
           width: 8,
           height: 8,
           borderRadius: '50%',
-          bgcolor: '#F59E0B'
+          bgcolor: isUpcomingShift ? '#F59E0B' : '#D7AA41'
         }} />
         <Typography sx={{ 
           color: '#111827',
@@ -98,26 +124,38 @@ const Review: React.FC<ReviewProps> = ({
           {label}
         </Typography>
       </Box>
-      <Typography sx={{ 
-        color: '#111827', 
-        mr: 4,
-        fontSize: '14px'
+      <Box sx={{ 
+        width: '300px'
       }}>
-        {value}
-      </Typography>
-      <Button
-        variant="text"
-        endIcon={<ArrowForwardIcon />}
-        onClick={onClick}
-        sx={{
-          color: '#374151',
-          '&:hover': {
-            backgroundColor: 'rgba(99, 102, 241, 0.04)',
-          },
-        }}
-      >
-        {buttonText}
-      </Button>
+        <Typography sx={{ 
+          color: '#111827',
+          fontSize: '14px'
+        }}>
+          {value}
+        </Typography>
+      </Box>
+      <Box sx={{
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'flex-end'
+      }}>
+        <Button
+          variant="outlined"
+          endIcon={<OpenInNewIcon />}
+          onClick={onClick}
+          sx={{
+            color: '#374151',
+            borderColor: '#E5E7EB',
+            height: '32px',
+            '&:hover': {
+              backgroundColor: 'rgba(99, 102, 241, 0.04)',
+              borderColor: '#6366F1',
+            },
+          }}
+        >
+          {buttonText}
+        </Button>
+      </Box>
     </Box>
   );
 
@@ -128,18 +166,26 @@ const Review: React.FC<ReviewProps> = ({
       </Typography>
 
       <Alert 
-        severity="warning" 
+        severity="warning"
+        icon={<WarningIcon sx={{ color: '#D7AA41' }} />}
         sx={{ 
           mb: 4,
-          backgroundColor: '#FFFBEB',
-          color: '#92400E',
+          backgroundColor: '#FFFAEA',
+          color: '#232329',
           '& .MuiAlert-icon': {
-            color: '#92400E'
+            color: '#D7AA41'
           },
-          border: '1px solid #FEF3C7',
+          border: '1px solid #E9C16B',
+          borderRadius: '8px',
+          fontFamily: '-apple-system, "SF Pro", "SF Pro Display"'
         }}
       >
-        {firstName} will be archived on the {lastWorkingDate} at 11:59pm if there are no upcoming shifts.
+        {archiveOption === 'immediately' 
+          ? `${firstName} will be archived immediately once confirming`
+          : archiveOption === 'manual'
+          ? `You have selected to manually archive ${firstName}.`
+          : `${firstName} will be archived on ${formatDate(lastWorkingDate)} at 11:00pm if there are no upcoming shifts`
+        }
       </Alert>
 
       <Box sx={{ mb: 4 }}>
@@ -152,6 +198,10 @@ const Review: React.FC<ReviewProps> = ({
           <DetailRow label="Reason for leaving" value={reasonForLeaving} />
           <DetailRow label="ATO reason" value={atoReason} />
           <DetailRow label="Sentiment" value={sentiment} />
+          <DetailRow 
+            label="Supporting document" 
+            value={documentUrl ? 'Document uploaded' : ''} 
+          />
           <DetailRow label="Comments" value={comments} />
         </Box>
       </Box>
@@ -169,6 +219,7 @@ const Review: React.FC<ReviewProps> = ({
             value={`${upcomingShifts} shifts`}
             buttonText="View shifts"
             onClick={() => {}}
+            isUpcomingShift={true}
           />
         </Box>
       </Box>
@@ -199,4 +250,4 @@ const Review: React.FC<ReviewProps> = ({
   );
 };
 
-export default Review; 
+export default Review;
