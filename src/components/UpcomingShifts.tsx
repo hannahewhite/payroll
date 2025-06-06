@@ -4,6 +4,7 @@ import {
   Typography,
   Button,
 } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 interface Shift {
   date: string;
@@ -14,9 +15,11 @@ interface Shift {
 interface UpcomingShiftsProps {
   onNext: () => void;
   onBack: () => void;
+  disableNext?: boolean;
 }
 
-const UpcomingShifts: React.FC<UpcomingShiftsProps> = ({ onNext, onBack }) => {
+const UpcomingShifts: React.FC<UpcomingShiftsProps> = ({ onNext, onBack, disableNext }) => {
+  console.log('UpcomingShifts disableNext:', disableNext);
   const shifts: Shift[] = [
     { date: 'Mon 10 Dec', time: '9:00 AM – 5:00 PM', location: 'Front of house' },
     { date: 'Mon 10 Dec', time: '6:00 PM – 11:00 PM', location: 'Bar service' },
@@ -192,32 +195,71 @@ const UpcomingShifts: React.FC<UpcomingShiftsProps> = ({ onNext, onBack }) => {
         ))}
       </Box>
 
-      {/* Navigation Buttons */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
-        <Button
-          variant="outlined"
-          onClick={onBack}
-          sx={{
-            borderColor: '#E5E7EB',
-            color: '#374151',
-            '&:hover': {
-              borderColor: '#D1D5DB',
-              backgroundColor: 'rgba(99, 102, 241, 0.04)',
-            },
-            height: '36px',
-            px: 4,
-          }}
-        >
-          Back
-        </Button>
+      {/* Footer Navigation */}
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: 0,
+          maxWidth: '1000px',
+          width: '100%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          marginLeft: '120px',
+          height: '80px',
+          bgcolor: '#FFFFFF',
+          borderTop: '0.8px solid #E5E7EB',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          px: 4,
+        }}
+      >
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Button
+            variant="outlined"
+            onClick={onBack}
+            sx={{
+              borderColor: '#E5E7EB',
+              color: '#374151',
+              '&:hover': {
+                borderColor: '#6366F1',
+                backgroundColor: 'rgba(99, 102, 241, 0.04)',
+              },
+              height: '36px',
+              px: 4,
+            }}
+          >
+            Back
+          </Button>
+          <Button
+            variant="text"
+            onClick={() => window.history.back()}
+            sx={{
+              color: '#374151',
+              '&:hover': {
+                backgroundColor: 'rgba(99, 102, 241, 0.04)',
+              },
+              height: '36px',
+              px: 4,
+            }}
+          >
+            Cancel
+          </Button>
+        </Box>
         <Button
           variant="contained"
           onClick={onNext}
+          disabled={disableNext === true}
+          endIcon={<ArrowForwardIcon />}
           sx={{
             bgcolor: '#3D1CBA',
             color: '#FFFFFF',
             '&:hover': {
               bgcolor: '#3019A0',
+            },
+            '&.Mui-disabled': {
+              bgcolor: '#E5E7EB !important',
+              color: '#9CA3AF !important',
             },
             height: '36px',
             px: 4,
