@@ -22,6 +22,14 @@ const validationSchema = Yup.object({
 const PayrollDetails: React.FC = () => {
   const navigate = useNavigate();
 
+  type PayrollDetailsFormValues = {
+    accountName: string;
+    bsb: string;
+    accountNumber: string;
+    bankingInstitution: string;
+    apcaCode: string;
+  };
+
   const formik = useFormik({
     initialValues: {
       accountName: '',
@@ -31,7 +39,7 @@ const PayrollDetails: React.FC = () => {
       apcaCode: '',
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: (values: PayrollDetailsFormValues) => {
       navigate('../pay-calendars');
     },
   });
@@ -77,6 +85,7 @@ const PayrollDetails: React.FC = () => {
               helperText={formik.touched.accountName && formik.errors.accountName}
               size="small"
               sx={{
+                width: '600px',
                 '& .MuiOutlinedInput-root': {
                   height: '32px',
                 },
@@ -101,6 +110,7 @@ const PayrollDetails: React.FC = () => {
               helperText={formik.touched.bsb && formik.errors.bsb}
               size="small"
               sx={{
+                width: '600px',
                 '& .MuiOutlinedInput-root': {
                   height: '32px',
                 },
@@ -125,6 +135,7 @@ const PayrollDetails: React.FC = () => {
               helperText={formik.touched.accountNumber && formik.errors.accountNumber}
               size="small"
               sx={{
+                width: '600px',
                 '& .MuiOutlinedInput-root': {
                   height: '32px',
                 },
@@ -149,6 +160,7 @@ const PayrollDetails: React.FC = () => {
               helperText={formik.touched.bankingInstitution && formik.errors.bankingInstitution}
               size="small"
               sx={{
+                width: '600px',
                 '& .MuiOutlinedInput-root': {
                   height: '32px',
                 },
@@ -176,6 +188,7 @@ const PayrollDetails: React.FC = () => {
               helperText={formik.touched.apcaCode && formik.errors.apcaCode}
               size="small"
               sx={{
+                width: '600px',
                 '& .MuiOutlinedInput-root': {
                   height: '32px',
                 },

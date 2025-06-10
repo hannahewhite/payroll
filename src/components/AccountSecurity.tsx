@@ -150,7 +150,10 @@ const AccountSecurity: React.FC = () => {
       <AuthenticatorSetupModal
         open={isAuthModalOpen}
         onClose={handleAuthModalClose}
-        onComplete={handleAuthComplete}
+        onComplete={() => {
+          setIsMFAEnabled(true);
+          setIsAuthModalOpen(false);
+        }}
       />
 
       <RecoveryCodeModal
