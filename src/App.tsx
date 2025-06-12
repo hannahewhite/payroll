@@ -11,6 +11,7 @@ import AccountSecurity from './components/AccountSecurity';
 import SetupLayout from './components/SetupLayout';
 import PayrunDetailsPage from './components/PayrunDetailsPage';
 import OffboardingFlow from './components/OffboardingFlow';
+import ResendPayslipsPage from './components/ResendPayslipsPage';
 import theme from './theme';
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
                 }}
               />
             } />
+            <Route path="/payruns/:id/resend-payslips" element={<ResendPayslipsPage />} />
             <Route path="/setup" element={<SetupLayout />}>
               <Route path="business-details" element={<BusinessDetails />} />
               <Route path="payroll-details" element={<PayrollDetails />} />

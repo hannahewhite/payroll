@@ -350,7 +350,7 @@ export const AuthenticatorSetupModal: React.FC<AuthenticatorSetupModalProps> = (
                 Download an authenticator app
               </Typography>
               <Typography sx={{ color: '#6B7280', fontSize: '14px', fontFamily: 'SF Pro Text', mb: 1 }}>
-                You can download an authenticator app e.g. Google auth
+                Download an app like Google Authenticator to your mobile device.
               </Typography>
               <Divider sx={{ my: 3 }} />
               <Typography sx={{ fontWeight: 600, fontSize: '14px', color: '#18113C', fontFamily: 'SF Pro Text', mb: 0.5 }}>
@@ -371,7 +371,7 @@ export const AuthenticatorSetupModal: React.FC<AuthenticatorSetupModalProps> = (
             </Box>
             <Box sx={{ mt: 2 }}>
               <Typography sx={{ color: '#6B7280', fontSize: '14px', fontFamily: 'SF Pro Text', mb: 1 }}>
-                Enter this code manually in your authenticator app:
+                Or enter this code manually in your authenticator app:
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: '#F4F4F5', borderRadius: '8px', px: 2, py: 1, width: 'fit-content', mb: 2 }}>
                 <Typography sx={{ fontFamily: 'SF Pro Text', fontWeight: 600, fontSize: '16px', letterSpacing: '0.1em', color: '#18113C', mr: 1 }}>

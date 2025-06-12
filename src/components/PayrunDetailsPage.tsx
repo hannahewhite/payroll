@@ -230,6 +230,18 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
               Bulk actions
             </Button>
             <Button
+              variant="outlined"
+              sx={{
+                mr: 2,
+                color: '#374151',
+                borderColor: '#E5E7EB',
+                textTransform: 'none',
+              }}
+              onClick={() => navigate('/payruns/1/resend-payslips')}
+            >
+              Resend payslips
+            </Button>
+            <Button
               variant="contained"
               sx={{
                 bgcolor: '#4F46E5',
