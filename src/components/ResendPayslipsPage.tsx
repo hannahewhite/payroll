@@ -17,10 +17,11 @@ import {
   InputAdornment,
   Menu,
   MenuItem,
-  IconButton
+  IconButton,
+  Snackbar
 } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import WarningIcon from '@mui/icons-material/Warning';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckIcon from '@mui/icons-material/Check';
@@ -43,13 +44,22 @@ const ResendPayslipsPage: React.FC = () => {
   const [selected, setSelected] = useState<number[]>(mockEmployees.filter(e => e.email).map(e => e.id));
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const period = location.state?.period || 'Weekly - 1/05/2025 – 7/05/2025';
 
-  const [selectedEmploymentTypes, setSelectedEmploymentTypes] = useState<string[]>([]);
-  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+  const [selectedEmploymentTypes, setSelectedEmploymentTypes] = useState<string[]>(employmentTypes);
+  const [selectedLocations, setSelectedLocations] = useState<string[]>(mainLocations);
+
+  // Compute filtered employees based on selected filters
+  const filteredEmployees = mockEmployees.filter(emp => {
+    const typeMatch = selectedEmploymentTypes.length === 0 || selectedEmploymentTypes.includes(emp.type);
+    const locationMatch = selectedLocations.length === 0 || selectedLocations.includes(emp.location);
+    return typeMatch && locationMatch;
+  });
 
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setSelected(mockEmployees.filter(e => e.email).map(e => e.id));
+      setSelected(filteredEmployees.filter(e => e.email).map(e => e.id));
     } else {
       setSelected([]);
     }
@@ -70,7 +80,7 @@ const ResendPayslipsPage: React.FC = () => {
     navigate(-1);
   };
 
-  const missingEmailCount = mockEmployees.filter(e => !e.email).length;
+  const missingEmailCount = filteredEmployees.filter(e => !e.email).length;
 
   const handleEmploymentTypeToggle = (type: string) => {
     setSelectedEmploymentTypes((prev) =>
@@ -81,6 +91,10 @@ const ResendPayslipsPage: React.FC = () => {
     setSelectedLocations((prev) =>
       prev.includes(loc) ? prev.filter((l) => l !== loc) : [...prev, loc]
     );
+  };
+
+  const handleEmailPayslips = () => {
+    navigate('/payruns/1', { state: { showPayslipsSentToast: true } });
   };
 
   return (
@@ -101,8 +115,8 @@ const ResendPayslipsPage: React.FC = () => {
         <Typography variant="h4" sx={{ fontWeight: 600, mb: 1 }}>
           Resend payslips
         </Typography>
-        <Typography variant="subtitle1" sx={{ color: '#6B7280', mb: 3 }}>
-          Weekly - 1/05/2025 – 7/05/2025
+        <Typography variant="subtitle1" sx={{ color: '#6B7280', mb: 3, fontWeight: 400 }}>
+          {period}
         </Typography>
         <Typography variant="body1" sx={{ mb: 2, fontWeight: 500, color: '#232329' }}>
           Select which employee you want to email payslips for:
@@ -161,9 +175,9 @@ const ResendPayslipsPage: React.FC = () => {
                   <Checkbox
                     checked={selectedEmploymentTypes.includes(type)}
                     onChange={() => handleEmploymentTypeToggle(type)}
-                    sx={{ width: 20, height: 20, borderRadius: 1, p: 0, mr: 1.5 }}
-                    icon={<Box sx={{ width: 20, height: 20, borderRadius: '4px', border: '1.5px solid #D1D5DB', bgcolor: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CheckIcon sx={{ color: 'white', fontSize: 18, opacity: 0 }} /></Box>}
-                    checkedIcon={<Box sx={{ width: 20, height: 20, borderRadius: '4px', bgcolor: '#3D1CBA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CheckIcon sx={{ color: 'white', fontSize: 18 }} /></Box>}
+                    sx={{ width: 16, height: 16, borderRadius: 1, p: 0, mr: 1.5 }}
+                    icon={<Box sx={{ width: 16, height: 16, borderRadius: '4px', border: '1.5px solid #D1D5DB', bgcolor: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CheckIcon sx={{ color: 'white', fontSize: 16, opacity: 0 }} /></Box>}
+                    checkedIcon={<Box sx={{ width: 16, height: 16, borderRadius: '4px', bgcolor: '#3D1CBA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CheckIcon sx={{ color: 'white', fontSize: 16 }} /></Box>}
                   />
                   <Typography sx={{ fontSize: 16, color: '#232329', fontWeight: 500 }}>{type}</Typography>
                 </Box>
@@ -176,9 +190,9 @@ const ResendPayslipsPage: React.FC = () => {
                   <Checkbox
                     checked={selectedLocations.includes(loc)}
                     onChange={() => handleLocationToggle(loc)}
-                    sx={{ width: 20, height: 20, borderRadius: 1, p: 0, mr: 1.5 }}
-                    icon={<Box sx={{ width: 20, height: 20, borderRadius: '4px', border: '1.5px solid #D1D5DB', bgcolor: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CheckIcon sx={{ color: 'white', fontSize: 18, opacity: 0 }} /></Box>}
-                    checkedIcon={<Box sx={{ width: 20, height: 20, borderRadius: '4px', bgcolor: '#3D1CBA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CheckIcon sx={{ color: 'white', fontSize: 18 }} /></Box>}
+                    sx={{ width: 16, height: 16, borderRadius: 1, p: 0, mr: 1.5 }}
+                    icon={<Box sx={{ width: 16, height: 16, borderRadius: '4px', border: '1.5px solid #D1D5DB', bgcolor: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CheckIcon sx={{ color: 'white', fontSize: 16, opacity: 0 }} /></Box>}
+                    checkedIcon={<Box sx={{ width: 16, height: 16, borderRadius: '4px', bgcolor: '#3D1CBA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CheckIcon sx={{ color: 'white', fontSize: 16 }} /></Box>}
                   />
                   <Typography sx={{ fontSize: 16, color: '#232329', fontWeight: 500 }}>{loc}</Typography>
                 </Box>
@@ -194,8 +208,8 @@ const ResendPayslipsPage: React.FC = () => {
               <TableRow>
                 <TableCell padding="checkbox" sx={{ backgroundColor: 'white', zIndex: 1 }}>
                   <Checkbox
-                    indeterminate={selected.length > 0 && selected.length < mockEmployees.filter(e => e.email).length}
-                    checked={selected.length === mockEmployees.filter(e => e.email).length}
+                    indeterminate={selected.length > 0 && selected.length < filteredEmployees.filter(e => e.email).length}
+                    checked={selected.length === filteredEmployees.filter(e => e.email).length && filteredEmployees.filter(e => e.email).length > 0}
                     onChange={handleSelectAll}
                     inputProps={{ 'aria-label': 'select all employees' }}
                     sx={{ width: 16, height: 16, borderRadius: 1, p: 0 }}
@@ -210,7 +224,7 @@ const ResendPayslipsPage: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {mockEmployees.map((emp) => (
+              {filteredEmployees.map((emp) => (
                 <TableRow key={emp.id}>
                   <TableCell padding="checkbox">
                     <Checkbox
@@ -277,7 +291,7 @@ const ResendPayslipsPage: React.FC = () => {
           <Button variant="outlined" onClick={handleCancel} sx={{ borderRadius: 2, textTransform: 'none', color: '#374151', borderColor: '#E5E7EB', fontWeight: 500, mr: 2 }}>
             Cancel
           </Button>
-          <Button variant="contained" sx={{ borderRadius: 2, textTransform: 'none', fontWeight: 600, bgcolor: '#3D1CBA', '&:hover': { bgcolor: '#2E1A8A' } }}>
+          <Button variant="contained" sx={{ borderRadius: 2, textTransform: 'none', fontWeight: 600, bgcolor: '#3D1CBA', '&:hover': { bgcolor: '#2E1A8A' } }} onClick={handleEmailPayslips}>
             Email {selected.length} payslip{selected.length !== 1 ? 's' : ''}
           </Button>
         </Box>

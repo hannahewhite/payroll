@@ -25,7 +25,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import Snackbar from '@mui/material/Snackbar';
 
 const PayslipSection = styled(Box)(({ theme }) => ({
   padding: '24px',
@@ -169,6 +170,8 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
   const [searchTerm, setSearchTerm] = useState('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [showToast, setShowToast] = useState(location.state?.showPayslipsSentToast || false);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -191,33 +194,57 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
     employee.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  React.useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => {
+        setShowToast(false);
+        // Remove the state so it doesn't show again on refresh
+        window.history.replaceState({}, document.title);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
+
   return (
     <Box sx={{ bgcolor: 'white', minHeight: '100vh', p: 3 }}>
       <Box sx={{ maxWidth: '1200px', margin: '0 auto' }}>
         {/* Header */}
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-          <Button
-            onClick={handleBack}
-            startIcon={<ArrowBackIcon />}
-            sx={{
-              color: '#6366F1',
-              textTransform: 'none',
-              fontSize: '14px',
-              fontWeight: 500,
-              '&:hover': { bgcolor: 'transparent' },
-            }}
-          >
-            Back
-          </Button>
-          <Box sx={{ flex: 1 }}>
-            <Typography variant="h5" sx={{ fontWeight: 600, color: '#111827' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Button
+              onClick={handleBack}
+              startIcon={<ArrowBackIcon />}
+              sx={{
+                color: '#6366F1',
+                textTransform: 'none',
+                fontSize: '14px',
+                fontWeight: 500,
+                p: 0,
+                minWidth: 'auto',
+                mr: 1,
+                '&:hover': { bgcolor: 'transparent' },
+              }}
+            >
+              Back
+            </Button>
+            <Typography variant="h5" sx={{ fontWeight: 600, color: '#111827', pl: 1 }}>
               {payrunData.period}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {payrunData.totalPayslips} payslips | Total payments: {payrunData.totalAmount}
-            </Typography>
           </Box>
+          <Box sx={{ flex: 1 }} />
           <Box>
+            <Button
+              variant="outlined"
+              sx={{
+                mr: 2,
+                color: '#374151',
+                borderColor: '#E5E7EB',
+                textTransform: 'none',
+              }}
+              onClick={() => navigate('/payruns/1/resend-payslips', { state: { period: payrunData.period } })}
+            >
+              Resend payslips
+            </Button>
             <Button
               variant="outlined"
               sx={{
@@ -228,18 +255,6 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
               }}
             >
               Bulk actions
-            </Button>
-            <Button
-              variant="outlined"
-              sx={{
-                mr: 2,
-                color: '#374151',
-                borderColor: '#E5E7EB',
-                textTransform: 'none',
-              }}
-              onClick={() => navigate('/payruns/1/resend-payslips')}
-            >
-              Resend payslips
             </Button>
             <Button
               variant="contained"
@@ -790,6 +805,36 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
           {/* Add menu items here */}
         </Menu>
       </Box>
+      <Snackbar
+        open={showToast}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        autoHideDuration={3000}
+        onClose={() => setShowToast(false)}
+        ContentProps={{
+          sx: {
+            bgcolor: '#32295E',
+            color: '#fff',
+            borderRadius: '8px',
+            width: 204,
+            height: 52,
+            minWidth: 0,
+            minHeight: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 14,
+            fontWeight: 400,
+            boxShadow: '0px 4px 16px 0px rgba(16, 24, 40, 0.08)',
+            left: 32,
+            bottom: 32,
+          }
+        }}
+        message={
+          <span style={{ fontSize: 14, fontWeight: 400 }}>
+            Payslips successfully sent
+          </span>
+        }
+      />
     </Box>
   );
 };
