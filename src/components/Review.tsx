@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import WarningIcon from '@mui/icons-material/Warning';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 
 interface ReviewProps {
   firstName: string;
@@ -198,10 +199,49 @@ const Review: React.FC<ReviewProps> = ({
           <DetailRow label="Reason for leaving" value={reasonForLeaving} />
           <DetailRow label="ATO reason" value={atoReason} />
           <DetailRow label="Sentiment" value={sentiment} />
-          <DetailRow 
-            label="Supporting document" 
-            value={documentUrl ? 'Document uploaded' : ''} 
-          />
+          <Box sx={{ 
+            display: 'flex', 
+            borderBottom: '1px solid #E5E7EB',
+            py: '12px',
+            alignItems: 'center',
+          }}>
+            <Typography sx={{ 
+              color: '#111827', 
+              width: '300px',
+              fontSize: '14px'
+            }}>
+              Supporting document
+            </Typography>
+            <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+              {documentUrl ? (
+                <Button
+                  variant="outlined"
+                  startIcon={<AttachFileIcon sx={{ fontSize: 18 }} />}
+                  sx={{
+                    color: '#374151',
+                    borderColor: '#E5E7EB',
+                    height: '32px',
+                    textTransform: 'none',
+                    fontSize: '14px',
+                    borderRadius: '8px',
+                    minWidth: '0',
+                    px: 2,
+                    '&:hover': {
+                      backgroundColor: 'rgba(99, 102, 241, 0.04)',
+                      borderColor: '#6366F1',
+                    },
+                  }}
+                  onClick={() => window.open(documentUrl, '_blank', 'noopener,noreferrer')}
+                >
+                  Preview document
+                </Button>
+              ) : (
+                <Typography sx={{ color: '#6B7280', fontStyle: 'italic', fontSize: '14px' }}>
+                  No document uploaded
+                </Typography>
+              )}
+            </Box>
+          </Box>
           <DetailRow label="Comments" value={comments} />
         </Box>
       </Box>

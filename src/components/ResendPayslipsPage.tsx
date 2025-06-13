@@ -83,14 +83,18 @@ const ResendPayslipsPage: React.FC = () => {
   const missingEmailCount = filteredEmployees.filter(e => !e.email).length;
 
   const handleEmploymentTypeToggle = (type: string) => {
-    setSelectedEmploymentTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-    );
+    setSelectedEmploymentTypes((prev) => {
+      const updated = prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type];
+      setSelected([]);
+      return updated;
+    });
   };
   const handleLocationToggle = (loc: string) => {
-    setSelectedLocations((prev) =>
-      prev.includes(loc) ? prev.filter((l) => l !== loc) : [...prev, loc]
-    );
+    setSelectedLocations((prev) => {
+      const updated = prev.includes(loc) ? prev.filter((l) => l !== loc) : [...prev, loc];
+      setSelected([]);
+      return updated;
+    });
   };
 
   const handleEmailPayslips = () => {

@@ -21,6 +21,9 @@ import Review from './Review';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface FormData {
   terminationDate: Date | null;
@@ -31,6 +34,7 @@ interface FormData {
   comments: string;
   archiveOption: string;
   documentUrl?: string;
+  documentName?: string;
 }
 
 const OffboardingFlow: React.FC = () => {
@@ -46,6 +50,7 @@ const OffboardingFlow: React.FC = () => {
     comments: '',
     archiveOption: '',
     documentUrl: '',
+    documentName: '',
   });
 
   const isFirstStepValid = () => {
@@ -137,7 +142,7 @@ const OffboardingFlow: React.FC = () => {
                     <input
                       style={{
                         height: '32px',
-                        width: '300px',
+                        width: '350px',
                         padding: '6px 12px',
                         fontSize: '14px',
                         fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
@@ -174,7 +179,7 @@ const OffboardingFlow: React.FC = () => {
                     <input
                       style={{
                         height: '32px',
-                        width: '300px',
+                        width: '350px',
                         padding: '6px 12px',
                         fontSize: '14px',
                         fontFamily: '"SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif',
@@ -219,7 +224,7 @@ const OffboardingFlow: React.FC = () => {
                   }}
                   sx={{
                     height: '32px',
-                    width: '300px',
+                    width: '350px',
                     '& .MuiSelect-select': {
                       padding: '6px 12px',
                       fontSize: '14px',
@@ -239,16 +244,22 @@ const OffboardingFlow: React.FC = () => {
                   }}
                 >
                   <MenuItem value="" disabled sx={{ fontSize: '14px' }}>Select</MenuItem>
-                  <MenuItem value="compensation_benefits" sx={{ fontSize: '14px' }}>Compensation and benefits</MenuItem>
-                  <MenuItem value="external_opportunities" sx={{ fontSize: '14px' }}>External opportunities</MenuItem>
-                  <MenuItem value="lack_flexibility" sx={{ fontSize: '14px' }}>Lack of flexibility</MenuItem>
-                  <MenuItem value="leadership_concerns" sx={{ fontSize: '14px' }}>Leadership or management concerns</MenuItem>
-                  <MenuItem value="limited_progression" sx={{ fontSize: '14px' }}>Limited career progression</MenuItem>
-                  <MenuItem value="organisational_changes" sx={{ fontSize: '14px' }}>Organisational changes</MenuItem>
-                  <MenuItem value="performance_issues" sx={{ fontSize: '14px' }}>Performance issues</MenuItem>
-                  <MenuItem value="role_misalignment" sx={{ fontSize: '14px' }}>Role misalignment</MenuItem>
-                  <MenuItem value="workload_burnout" sx={{ fontSize: '14px' }}>Workload or burnout</MenuItem>
-                  <MenuItem value="culture_misalignment" sx={{ fontSize: '14px' }}>Workplace culture misalignment</MenuItem>
+                  <MenuItem value="abandonment" sx={{ fontSize: '14px' }}>Abandonment</MenuItem>
+                  <MenuItem value="better_rewards" sx={{ fontSize: '14px' }}>Better rewards</MenuItem>
+                  <MenuItem value="career_advancement" sx={{ fontSize: '14px' }}>Career advancement</MenuItem>
+                  <MenuItem value="career_change" sx={{ fontSize: '14px' }}>Career change</MenuItem>
+                  <MenuItem value="family_matters" sx={{ fontSize: '14px' }}>Family matters</MenuItem>
+                  <MenuItem value="further_education" sx={{ fontSize: '14px' }}>Further education</MenuItem>
+                  <MenuItem value="health_issues" sx={{ fontSize: '14px' }}>Health issues</MenuItem>
+                  <MenuItem value="incomplete_probation" sx={{ fontSize: '14px' }}>Incomplete probation</MenuItem>
+                  <MenuItem value="poor_performance" sx={{ fontSize: '14px' }}>Poor performance</MenuItem>
+                  <MenuItem value="redundancy" sx={{ fontSize: '14px' }}>Redundancy</MenuItem>
+                  <MenuItem value="relocation" sx={{ fontSize: '14px' }}>Relocation</MenuItem>
+                  <MenuItem value="resignation" sx={{ fontSize: '14px' }}>Resignation</MenuItem>
+                  <MenuItem value="retirement" sx={{ fontSize: '14px' }}>Retirement</MenuItem>
+                  <MenuItem value="serious_misconduct" sx={{ fontSize: '14px' }}>Serious misconduct</MenuItem>
+                  <MenuItem value="travelling" sx={{ fontSize: '14px' }}>Travelling</MenuItem>
+                  <MenuItem value="work_eligibility" sx={{ fontSize: '14px' }}>Work eligibility</MenuItem>
                 </Select>
                 {showErrors && !formData.reasonForLeaving && (
                   <Typography sx={{ color: '#AF1105', fontSize: '14px', mt: 1 }}>
@@ -283,7 +294,7 @@ const OffboardingFlow: React.FC = () => {
                   }}
                   sx={{
                     height: '32px',
-                    width: '300px',
+                    width: '350px',
                     '& .MuiSelect-select': {
                       padding: '6px 12px',
                       fontSize: '14px',
@@ -385,80 +396,99 @@ const OffboardingFlow: React.FC = () => {
                     (optional)
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box>
                   {formData.documentUrl ? (
-                    <>
-                      <Typography sx={{ 
-                        color: '#111827', 
-                        fontSize: '14px',
-                        mr: 2
-                      }}>
-                        Document uploaded
-                      </Typography>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        startIcon={<AttachFileIcon />}
-                        onClick={() => window.open(formData.documentUrl, '_blank')}
-                        sx={{
-                          color: '#374151',
-                          borderColor: '#E5E7EB',
-                          height: '32px',
-                          '&:hover': {
-                            backgroundColor: 'rgba(99, 102, 241, 0.04)',
-                            borderColor: '#6366F1',
-                          },
-                        }}
-                      >
-                        View document
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={() => setFormData({ ...formData, documentUrl: '' })}
-                        sx={{
-                          color: '#374151',
-                          borderColor: '#E5E7EB',
-                          height: '32px',
-                          '&:hover': {
-                            backgroundColor: 'rgba(99, 102, 241, 0.04)',
-                            borderColor: '#6366F1',
-                          },
-                        }}
-                      >
-                        Remove
-                      </Button>
-                    </>
-                  ) : (
-                    <Button
-                      component="label"
-                      variant="outlined"
-                      size="small"
-                      startIcon={<AttachFileIcon />}
+                    <Box
                       sx={{
-                        color: '#374151',
-                        borderColor: '#E5E7EB',
-                        height: '32px',
-                        '&:hover': {
-                          backgroundColor: 'rgba(99, 102, 241, 0.04)',
-                          borderColor: '#6366F1',
-                        },
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        width: 350,
+                        bgcolor: '#FAFAFB',
+                        borderRadius: '8px',
+                        px: 3,
+                        py: 2,
+                        mb: 2,
+                        boxSizing: 'border-box',
                       }}
                     >
-                      Upload document
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <InsertDriveFileIcon sx={{ color: '#1991B7', fontSize: 16, width: 16, height: 16 }} />
+                        <Typography sx={{ color: '#18113C', fontSize: 14, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 230 }}>
+                          {formData.documentName || 'document_name'}
+                        </Typography>
+                      </Box>
+                      <DeleteIcon
+                        sx={{ color: '#C9150C', fontSize: 16, width: 16, height: 16, cursor: 'pointer' }}
+                        onClick={() => setFormData({ ...formData, documentUrl: '', documentName: '' })}
+                      />
+                    </Box>
+                  ) : (
+                    <Box
+                      sx={{
+                        border: '1.5px dashed #E5E7EB',
+                        borderRadius: '8px',
+                        bgcolor: '#FAFAFB',
+                        px: 2,
+                        py: 1.5,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        width: 350,
+                        cursor: 'pointer',
+                        transition: 'border-color 0.2s',
+                        '&:hover': { borderColor: '#6C3DCC' },
+                        mb: 2,
+                        position: 'relative',
+                        gap: 2,
+                        boxSizing: 'border-box',
+                      }}
+                      onClick={() => document.getElementById('supporting-doc-upload')?.click()}
+                      onDragOver={e => { e.preventDefault(); e.stopPropagation(); }}
+                      onDrop={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (e.dataTransfer.files?.[0]) {
+                          const file = e.dataTransfer.files[0];
+                          const fakeUrl = URL.createObjectURL(file);
+                          setFormData({ ...formData, documentUrl: fakeUrl, documentName: file.name });
+                        }
+                      }}
+                    >
+                      <CloudUploadIcon sx={{ color: '#3D1CBA', fontSize: 24, minWidth: 24, minHeight: 24 }} />
+                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                        <Typography sx={{ fontWeight: 500, color: '#232329', fontSize: 14, mb: 0.5 }}>
+                          Drop files here, or{' '}
+                          <Box
+                            component="span"
+                            sx={{ color: '#3D1CBA', textDecoration: 'none', cursor: 'pointer', fontSize: 14 }}
+                            onClick={e => {
+                              e.stopPropagation();
+                              document.getElementById('supporting-doc-upload')?.click();
+                            }}
+                          >
+                            browse
+                          </Box>
+                        </Typography>
+                        <Typography sx={{ color: '#6B7280', fontSize: 14 }}>
+                          PDF and images supported
+                        </Typography>
+                      </Box>
                       <input
+                        id="supporting-doc-upload"
                         type="file"
+                        accept="application/pdf,image/*"
                         hidden
-                        onChange={(e) => {
+                        onChange={e => {
                           if (e.target.files?.[0]) {
-                            // Here you would typically upload the file to your server
-                            // and get back a URL. For now, we'll create a fake URL
-                            const fakeUrl = URL.createObjectURL(e.target.files[0]);
-                            setFormData({ ...formData, documentUrl: fakeUrl });
+                            const file = e.target.files[0];
+                            const fakeUrl = URL.createObjectURL(file);
+                            setFormData({ ...formData, documentUrl: fakeUrl, documentName: file.name });
                           }
                         }}
                       />
-                    </Button>
+                    </Box>
                   )}
                 </Box>
               </Box>
@@ -480,7 +510,7 @@ const OffboardingFlow: React.FC = () => {
                   value={formData.comments}
                   onChange={handleTextChange('comments')}
                   sx={{
-                    width: '300px',
+                    width: '350px',
                     '& .MuiOutlinedInput-root': {
                       fontSize: '14px',
                       height: '84px',
