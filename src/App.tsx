@@ -28,6 +28,7 @@ function App() {
                   period: '26 Feb - 2 Mar',
                   totalPayslips: 12,
                   totalAmount: '$112,000.00',
+                  calendar: 'Weekly',
                 }}
               />
             } />

@@ -67,6 +67,7 @@ interface PayrunDetailsPageProps {
     period: string;
     totalPayslips: number;
     totalAmount: string;
+    calendar: string;
   };
 }
 
@@ -194,6 +195,11 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
     employee.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const filteredSummary = summaryData.filter(employee =>
+    employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    employee.employment.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   React.useEffect(() => {
     if (showToast) {
       const timer = setTimeout(() => {
@@ -206,29 +212,33 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
   }, [showToast]);
 
   return (
-    <Box sx={{ bgcolor: 'white', minHeight: '100vh', p: 3 }}>
-      <Box sx={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <Box sx={{ bgcolor: 'white', minHeight: '100vh', p: 0 }}>
+      <Box sx={{ maxWidth: '1200px', margin: '0 auto', px: 0 }}>
         {/* Header */}
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
             <Button
               onClick={handleBack}
               startIcon={<ArrowBackIcon />}
               sx={{
-                color: '#6366F1',
+                color: '#3D1CBA',
                 textTransform: 'none',
                 fontSize: '14px',
                 fontWeight: 500,
                 p: 0,
                 minWidth: 'auto',
-                mr: 1,
+                mb: 1,
+                height: '32px',
                 '&:hover': { bgcolor: 'transparent' },
               }}
             >
               Back
             </Button>
-            <Typography variant="h5" sx={{ fontWeight: 600, color: '#111827', pl: 1 }}>
-              {payrunData.period}
+            <Typography variant="h5" sx={{ fontWeight: 600, color: '#111827' }}>
+              {payrunData.calendar ? `${payrunData.calendar} • ${payrunData.period} 2024` : `${payrunData.period} 2024`}
+            </Typography>
+            <Typography sx={{ color: '#6B7280', fontSize: '14px', mt: 0.5 }}>
+              {employeeData.length} payslips • ${summaryData.reduce((sum, e) => sum + e.total, 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} total
             </Typography>
           </Box>
           <Box sx={{ flex: 1 }} />
@@ -240,6 +250,7 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
                 color: '#374151',
                 borderColor: '#E5E7EB',
                 textTransform: 'none',
+                height: '32px',
               }}
               onClick={() => navigate('/payruns/1/resend-payslips', { state: { period: payrunData.period } })}
             >
@@ -252,6 +263,7 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
                 color: '#374151',
                 borderColor: '#E5E7EB',
                 textTransform: 'none',
+                height: '32px',
               }}
             >
               Bulk actions
@@ -259,10 +271,11 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
             <Button
               variant="contained"
               sx={{
-                bgcolor: '#4F46E5',
+                bgcolor: '#3D1CBA',
                 color: 'white',
                 textTransform: 'none',
-                '&:hover': { bgcolor: '#4338CA' },
+                '&:hover': { bgcolor: '#3019A0' },
+                height: '32px',
               }}
             >
               Complete pay run
@@ -285,11 +298,11 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
                 fontWeight: 500,
                 color: '#6B7280',
                 '&.Mui-selected': {
-                  color: '#4F46E5',
+                  color: '#3D1CBA',
                 },
               },
               '& .MuiTabs-indicator': {
-                backgroundColor: '#4F46E5',
+                backgroundColor: '#3D1CBA',
               },
             }}
           >
@@ -300,7 +313,7 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
 
         {/* Content */}
         {tabValue === 0 ? (
-          <Box sx={{ p: 3 }}>
+          <Box sx={{ pl: 0, pr: 0, pt: 3, pb: 3 }}>
             {/* Search and Compare */}
             <Box sx={{ 
               display: 'flex', 
@@ -311,18 +324,24 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
               <TextField
                 placeholder="Search"
                 size="small"
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SearchIcon sx={{ color: '#9CA3AF' }} />
+                      <SearchIcon sx={{ color: '#9CA3AF', fontSize: 18, mr: 2 }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
-                  width: '320px',
+                  width: '300px',
                   '& .MuiOutlinedInput-root': {
-                    height: '40px',
+                    height: '32px',
                     fontSize: '14px',
+                    pl: 0,
+                  },
+                  '& input': {
+                    paddingLeft: 0,
                   },
                 }}
               />
@@ -346,7 +365,7 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
                     textTransform: 'none',
                     fontSize: '14px',
                     fontWeight: 500,
-                    height: '36px',
+                    height: '32px',
                     '&:hover': {
                       borderColor: '#D1D5DB',
                       backgroundColor: '#F9FAFB',
@@ -559,86 +578,94 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {summaryData.map((employee, index) => (
-                    <TableRow key={index}>
-                      <StyledTableCell>{employee.name}</StyledTableCell>
-                      <StyledTableCell>{employee.employment}</StyledTableCell>
-                      <StyledTableCell align="right">
-                        {employee.regularHrs.value}
-                        {employee.regularHrs.change !== 0 && (
-                          <Typography 
-                            component="span" 
-                            sx={{ 
-                              ml: 1,
-                              color: employee.regularHrs.change > 0 ? '#10B981' : '#EF4444',
-                              fontSize: '14px',
-                            }}
-                          >
-                            {employee.regularHrs.change > 0 ? '↑' : '↓'} {Math.abs(employee.regularHrs.change)}
-                          </Typography>
-                        )}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {employee.additionalHrs.value}
-                        {employee.additionalHrs.change !== 0 && (
-                          <Typography 
-                            component="span" 
-                            sx={{ 
-                              ml: 1,
-                              color: employee.additionalHrs.change > 0 ? '#10B981' : '#EF4444',
-                              fontSize: '14px',
-                            }}
-                          >
-                            {employee.additionalHrs.change > 0 ? '↑' : '↓'} {Math.abs(employee.additionalHrs.change)}
-                          </Typography>
-                        )}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {employee.leaveHrs.value}
-                        {employee.leaveHrs.change !== 0 && (
-                          <Typography 
-                            component="span" 
-                            sx={{ 
-                              ml: 1,
-                              color: '#10B981',
-                              fontSize: '14px',
-                            }}
-                          >
-                            ↑ {employee.leaveHrs.change}
-                          </Typography>
-                        )}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        ${employee.total.toFixed(2)}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        ${employee.comparisonPay.toFixed(2)}
-                      </StyledTableCell>
-                      <StyledTableCell 
-                        align="right"
-                        sx={{
-                          color: employee.difference.value > 0 ? '#10B981' : 
-                                employee.difference.value < 0 ? '#EF4444' : 'inherit',
-                        }}
-                      >
-                        {employee.difference.value === 0 ? '0' : 
-                          `${employee.difference.value < 0 ? '↓' : '↑'} $${Math.abs(employee.difference.value).toFixed(2)} (${employee.difference.percentage}%)`
-                        }
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {employee.hasIssues && (
-                          <Typography 
-                            sx={{ 
-                              color: '#EF4444',
-                              fontSize: '14px',
-                            }}
-                          >
-                            ▲
-                          </Typography>
-                        )}
+                  {filteredSummary.length === 0 ? (
+                    <TableRow>
+                      <StyledTableCell colSpan={9} align="center" sx={{ color: '#6B7280', fontSize: '14px', py: 6 }}>
+                        No employees found matching your search.
                       </StyledTableCell>
                     </TableRow>
-                  ))}
+                  ) : (
+                    filteredSummary.map((employee, index) => (
+                      <TableRow key={index}>
+                        <StyledTableCell>{employee.name}</StyledTableCell>
+                        <StyledTableCell>{employee.employment}</StyledTableCell>
+                        <StyledTableCell align="right">
+                          {employee.regularHrs.value}
+                          {employee.regularHrs.change !== 0 && (
+                            <Typography 
+                              component="span" 
+                              sx={{ 
+                                ml: 1,
+                                color: employee.regularHrs.change > 0 ? '#10B981' : '#EF4444',
+                                fontSize: '14px',
+                              }}
+                            >
+                              {employee.regularHrs.change > 0 ? '↑' : '↓'} {Math.abs(employee.regularHrs.change)}
+                            </Typography>
+                          )}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                          {employee.additionalHrs.value}
+                          {employee.additionalHrs.change !== 0 && (
+                            <Typography 
+                              component="span" 
+                              sx={{ 
+                                ml: 1,
+                                color: employee.additionalHrs.change > 0 ? '#10B981' : '#EF4444',
+                                fontSize: '14px',
+                              }}
+                            >
+                              {employee.additionalHrs.change > 0 ? '↑' : '↓'} {Math.abs(employee.additionalHrs.change)}
+                            </Typography>
+                          )}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                          {employee.leaveHrs.value}
+                          {employee.leaveHrs.change !== 0 && (
+                            <Typography 
+                              component="span" 
+                              sx={{ 
+                                ml: 1,
+                                color: '#10B981',
+                                fontSize: '14px',
+                              }}
+                            >
+                              ↑ {employee.leaveHrs.change}
+                            </Typography>
+                          )}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                          ${employee.total.toFixed(2)}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                          ${employee.comparisonPay.toFixed(2)}
+                        </StyledTableCell>
+                        <StyledTableCell 
+                          align="right"
+                          sx={{
+                            color: employee.difference.value > 0 ? '#10B981' : 
+                                  employee.difference.value < 0 ? '#EF4444' : 'inherit',
+                          }}
+                        >
+                          {employee.difference.value === 0 ? '0' : 
+                            `${employee.difference.value < 0 ? '↓' : '↑'} $${Math.abs(employee.difference.value).toFixed(2)} (${employee.difference.percentage}%)`
+                          }
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                          {employee.hasIssues && (
+                            <Typography 
+                              sx={{ 
+                                color: '#EF4444',
+                                fontSize: '14px',
+                              }}
+                            >
+                              ▲
+                            </Typography>
+                          )}
+                        </StyledTableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -665,7 +692,7 @@ const PayrunDetailsPage: React.FC<PayrunDetailsPageProps> = ({ payrunData }) => 
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SearchIcon sx={{ color: '#9CA3AF' }} />
+                      <SearchIcon sx={{ color: '#9CA3AF', fontSize: 18, mr: 2 }} />
                     </InputAdornment>
                   ),
                 }}
