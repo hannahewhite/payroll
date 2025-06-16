@@ -257,36 +257,35 @@ const BusinessDetails: React.FC = () => {
           <Typography variant="body2" sx={{ mb: 1 }}>
             Australian Business Number
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Box sx={{ flex: '1 1 auto' }}>
-              <TextField
-                fullWidth
-                name="abn"
-                placeholder="Enter 11 digit ABN..."
-                value={formik.values.abn}
-                onChange={formik.handleChange}
-                error={formik.touched.abn && Boolean(formik.errors.abn)}
-                helperText={formik.touched.abn && formik.errors.abn}
-                size="small"
-              />
-            </Box>
-            <Box>
-              <Button 
-                variant="outlined" 
-                sx={{ 
-                  height: '32px',
-                  minWidth: '100px',
-                  borderColor: '#E5E7EB',
-                  color: '#374151',
-                  '&:hover': {
-                    borderColor: '#6366F1',
-                    backgroundColor: 'rgba(99, 102, 241, 0.04)',
-                  },
-                }}
-              >
-                Search
-              </Button>
-            </Box>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <TextField
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+              }}
+              name="abn"
+              placeholder="Enter 11 digit ABN..."
+              value={formik.values.abn}
+              onChange={formik.handleChange}
+              error={formik.touched.abn && Boolean(formik.errors.abn)}
+              helperText={formik.touched.abn && formik.errors.abn}
+              size="small"
+            />
+            <Button 
+              variant="outlined" 
+              sx={{ 
+                height: '32px',
+                minWidth: '100px',
+                borderColor: '#E5E7EB',
+                color: '#374151',
+                '&:hover': {
+                  borderColor: '#6366F1',
+                  backgroundColor: 'rgba(99, 102, 241, 0.04)',
+                },
+              }}
+            >
+              Search
+            </Button>
           </Box>
 
           <Box sx={{ mt: 2 }}>
@@ -294,7 +293,10 @@ const BusinessDetails: React.FC = () => {
               Legal business name
             </Typography>
             <TextField
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+              }}
               name="legalBusinessName"
               placeholder="Enter legal business name..."
               value={formik.values.legalBusinessName}
@@ -302,14 +304,6 @@ const BusinessDetails: React.FC = () => {
               error={formik.touched.legalBusinessName && Boolean(formik.errors.legalBusinessName)}
               helperText={formik.touched.legalBusinessName && formik.errors.legalBusinessName}
               size="small"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiOutlinedInput-input': {
-                  padding: '6px 12px',
-                },
-              }}
             />
           </Box>
 
@@ -318,7 +312,10 @@ const BusinessDetails: React.FC = () => {
               Trading name
             </Typography>
             <TextField
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+              }}
               name="tradingName"
               placeholder="Enter trading name..."
               value={formik.values.tradingName}
@@ -326,14 +323,6 @@ const BusinessDetails: React.FC = () => {
               error={formik.touched.tradingName && Boolean(formik.errors.tradingName)}
               helperText={formik.touched.tradingName && formik.errors.tradingName}
               size="small"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiOutlinedInput-input': {
-                  padding: '6px 12px',
-                },
-              }}
             />
           </Box>
 
@@ -345,21 +334,16 @@ const BusinessDetails: React.FC = () => {
               The unique identifier for a branch in your business
             </Typography>
             <TextField
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+              }}
               name="branchCode"
               value={formik.values.branchCode}
               onChange={formik.handleChange}
               error={formik.touched.branchCode && Boolean(formik.errors.branchCode)}
               helperText={formik.touched.branchCode && formik.errors.branchCode}
               size="small"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiOutlinedInput-input': {
-                  padding: '6px 12px',
-                },
-              }}
             />
           </Box>
 
@@ -369,47 +353,33 @@ const BusinessDetails: React.FC = () => {
             <Typography variant="subtitle1" gutterBottom>
               Primary contact
             </Typography>
-            <Box sx={{ display: 'flex', gap: 2, '& > *': { flex: 1 } }}>
-              <Box>
-                <TextField
-                  fullWidth
-                  name="firstName"
-                  placeholder="First name"
-                  value={formik.values.firstName}
-                  onChange={formik.handleChange}
-                  error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-                  helperText={formik.touched.firstName && formik.errors.firstName}
-                  size="small"
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      height: '32px',
-                    },
-                    '& .MuiOutlinedInput-input': {
-                      padding: '6px 12px',
-                    },
-                  }}
-                />
-              </Box>
-              <Box>
-                <TextField
-                  fullWidth
-                  name="lastName"
-                  placeholder="Last name"
-                  value={formik.values.lastName}
-                  onChange={formik.handleChange}
-                  error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-                  helperText={formik.touched.lastName && formik.errors.lastName}
-                  size="small"
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      height: '32px',
-                    },
-                    '& .MuiOutlinedInput-input': {
-                      padding: '6px 12px',
-                    },
-                  }}
-                />
-              </Box>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <TextField
+                sx={{ width: '350px',
+                  '& .MuiOutlinedInput-root': { height: '32px' },
+                  '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+                }}
+                name="firstName"
+                placeholder="First name"
+                value={formik.values.firstName}
+                onChange={formik.handleChange}
+                error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                helperText={formik.touched.firstName && formik.errors.firstName}
+                size="small"
+              />
+              <TextField
+                sx={{ width: '350px',
+                  '& .MuiOutlinedInput-root': { height: '32px' },
+                  '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+                }}
+                name="lastName"
+                placeholder="Last name"
+                value={formik.values.lastName}
+                onChange={formik.handleChange}
+                error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+                helperText={formik.touched.lastName && formik.errors.lastName}
+                size="small"
+              />
             </Box>
           </Box>
 
@@ -418,7 +388,10 @@ const BusinessDetails: React.FC = () => {
               Business phone
             </Typography>
             <TextField
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+              }}
               name="businessPhone"
               placeholder="Enter business phone..."
               value={formik.values.businessPhone}
@@ -426,14 +399,6 @@ const BusinessDetails: React.FC = () => {
               error={formik.touched.businessPhone && Boolean(formik.errors.businessPhone)}
               helperText={formik.touched.businessPhone && formik.errors.businessPhone}
               size="small"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiOutlinedInput-input': {
-                  padding: '6px 12px',
-                },
-              }}
             />
           </Box>
 
@@ -442,7 +407,10 @@ const BusinessDetails: React.FC = () => {
               Email
             </Typography>
             <TextField
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+              }}
               name="email"
               placeholder="Enter email address..."
               value={formik.values.email}
@@ -450,20 +418,12 @@ const BusinessDetails: React.FC = () => {
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
               size="small"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiOutlinedInput-input': {
-                  padding: '6px 12px',
-                },
-              }}
             />
           </Box>
         </Box>
 
         <Box sx={{ mt: 4 }}>
-          <Typography variant="h5" sx={{ mb: 1 }}>
+          <Typography sx={{ fontSize: '16px', fontWeight: 600, color: '#111827', mb: 1 }}>
             Address
           </Typography>
           <Typography variant="body1" sx={{ mb: 3 }}>
@@ -476,7 +436,10 @@ const BusinessDetails: React.FC = () => {
             </Typography>
             <TextField
               id="address-search"
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiOutlinedInput-input': { padding: '6px 12px', paddingLeft: '36px' },
+              }}
               name="addressLine1"
               placeholder="Search address..."
               value={formik.values.addressLine1}
@@ -497,15 +460,6 @@ const BusinessDetails: React.FC = () => {
                   </InputAdornment>
                 ),
               }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiOutlinedInput-input': {
-                  padding: '6px 12px',
-                  paddingLeft: '36px',
-                },
-              }}
             />
           </Box>
 
@@ -514,7 +468,10 @@ const BusinessDetails: React.FC = () => {
               Unit / Level / Suite (optional)
             </Typography>
             <TextField
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+              }}
               name="unitLevel"
               placeholder="Enter unit, level or suite..."
               value={formik.values.unitLevel}
@@ -522,14 +479,6 @@ const BusinessDetails: React.FC = () => {
               error={formik.touched.unitLevel && Boolean(formik.errors.unitLevel)}
               helperText={formik.touched.unitLevel && formik.errors.unitLevel}
               size="small"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiOutlinedInput-input': {
-                  padding: '6px 12px',
-                },
-              }}
             />
           </Box>
 
@@ -538,7 +487,10 @@ const BusinessDetails: React.FC = () => {
               City / Suburb
             </Typography>
             <TextField
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+              }}
               name="citySuburb"
               placeholder="Enter city or suburb..."
               value={formik.values.citySuburb}
@@ -546,14 +498,6 @@ const BusinessDetails: React.FC = () => {
               error={formik.touched.citySuburb && Boolean(formik.errors.citySuburb)}
               helperText={formik.touched.citySuburb && formik.errors.citySuburb}
               size="small"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiOutlinedInput-input': {
-                  padding: '6px 12px',
-                },
-              }}
             />
           </Box>
 
@@ -563,21 +507,16 @@ const BusinessDetails: React.FC = () => {
             </Typography>
             <TextField
               select
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiSelect-select': { padding: '6px 12px' },
+              }}
               name="state"
               value={formik.values.state}
               onChange={formik.handleChange}
               error={formik.touched.state && Boolean(formik.errors.state)}
               helperText={formik.touched.state && formik.errors.state}
               size="small"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiSelect-select': {
-                  padding: '6px 12px',
-                },
-              }}
             >
               {states.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -592,7 +531,10 @@ const BusinessDetails: React.FC = () => {
               Postcode
             </Typography>
             <TextField
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+              }}
               name="postcode"
               placeholder="0000"
               value={formik.values.postcode}
@@ -600,14 +542,6 @@ const BusinessDetails: React.FC = () => {
               error={formik.touched.postcode && Boolean(formik.errors.postcode)}
               helperText={formik.touched.postcode && formik.errors.postcode}
               size="small"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiOutlinedInput-input': {
-                  padding: '6px 12px',
-                },
-              }}
             />
           </Box>
 
@@ -617,7 +551,10 @@ const BusinessDetails: React.FC = () => {
             </Typography>
             <TextField
               select
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiSelect-select': { padding: '6px 12px' },
+              }}
               name="country"
               value={formik.values.country}
               onChange={formik.handleChange}
@@ -625,14 +562,6 @@ const BusinessDetails: React.FC = () => {
               helperText={formik.touched.country && formik.errors.country}
               size="small"
               disabled
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiSelect-select': {
-                  padding: '6px 12px',
-                },
-              }}
             >
               <MenuItem value="Australia">Australia</MenuItem>
             </TextField>

@@ -76,7 +76,10 @@ const PayrollDetails: React.FC = () => {
               Account name
             </Typography>
             <TextField
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+              }}
               name="accountName"
               placeholder="Enter account name..."
               value={formik.values.accountName}
@@ -84,15 +87,6 @@ const PayrollDetails: React.FC = () => {
               error={formik.touched.accountName && Boolean(formik.errors.accountName)}
               helperText={formik.touched.accountName && formik.errors.accountName}
               size="small"
-              sx={{
-                width: '600px',
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiOutlinedInput-input': {
-                  padding: '6px 12px',
-                },
-              }}
             />
           </Box>
 
@@ -101,7 +95,10 @@ const PayrollDetails: React.FC = () => {
               BSB
             </Typography>
             <TextField
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+              }}
               name="bsb"
               placeholder="000 000"
               value={formik.values.bsb}
@@ -109,15 +106,6 @@ const PayrollDetails: React.FC = () => {
               error={formik.touched.bsb && Boolean(formik.errors.bsb)}
               helperText={formik.touched.bsb && formik.errors.bsb}
               size="small"
-              sx={{
-                width: '600px',
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiOutlinedInput-input': {
-                  padding: '6px 12px',
-                },
-              }}
             />
           </Box>
 
@@ -126,7 +114,10 @@ const PayrollDetails: React.FC = () => {
               Account number
             </Typography>
             <TextField
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+              }}
               name="accountNumber"
               placeholder="Enter account number..."
               value={formik.values.accountNumber}
@@ -134,15 +125,6 @@ const PayrollDetails: React.FC = () => {
               error={formik.touched.accountNumber && Boolean(formik.errors.accountNumber)}
               helperText={formik.touched.accountNumber && formik.errors.accountNumber}
               size="small"
-              sx={{
-                width: '600px',
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiOutlinedInput-input': {
-                  padding: '6px 12px',
-                },
-              }}
             />
           </Box>
 
@@ -151,7 +133,10 @@ const PayrollDetails: React.FC = () => {
               Banking institution
             </Typography>
             <TextField
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+              }}
               name="bankingInstitution"
               placeholder="Enter banking institution..."
               value={formik.values.bankingInstitution}
@@ -159,15 +144,6 @@ const PayrollDetails: React.FC = () => {
               error={formik.touched.bankingInstitution && Boolean(formik.errors.bankingInstitution)}
               helperText={formik.touched.bankingInstitution && formik.errors.bankingInstitution}
               size="small"
-              sx={{
-                width: '600px',
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiOutlinedInput-input': {
-                  padding: '6px 12px',
-                },
-              }}
             />
           </Box>
 
@@ -179,7 +155,10 @@ const PayrollDetails: React.FC = () => {
               Optional
             </Typography>
             <TextField
-              fullWidth
+              sx={{ width: '350px',
+                '& .MuiOutlinedInput-root': { height: '32px' },
+                '& .MuiOutlinedInput-input': { padding: '6px 12px' },
+              }}
               name="apcaCode"
               placeholder="Enter APCA code..."
               value={formik.values.apcaCode}
@@ -187,15 +166,6 @@ const PayrollDetails: React.FC = () => {
               error={formik.touched.apcaCode && Boolean(formik.errors.apcaCode)}
               helperText={formik.touched.apcaCode && formik.errors.apcaCode}
               size="small"
-              sx={{
-                width: '600px',
-                '& .MuiOutlinedInput-root': {
-                  height: '32px',
-                },
-                '& .MuiOutlinedInput-input': {
-                  padding: '6px 12px',
-                },
-              }}
             />
           </Box>
         </Box>

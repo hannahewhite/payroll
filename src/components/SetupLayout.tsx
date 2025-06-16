@@ -146,7 +146,7 @@ const SetupLayout: React.FC = () => {
                 px: 4,
               }}
             >
-              Back
+              {currentStepIndex === 0 ? 'Cancel' : 'Back'}
             </Button>
             <Button
               variant="contained"

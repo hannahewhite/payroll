@@ -42,7 +42,7 @@ const PayCalendars: React.FC = () => {
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" sx={{ fontSize: '30px', fontWeight: 600, mb: 2 }}>
+        <Typography variant="h5" sx={{ fontWeight: 600, color: '#111827', mb: 1 }}>
           Pay calendars
         </Typography>
         <Typography variant="body1" color="text.secondary">
