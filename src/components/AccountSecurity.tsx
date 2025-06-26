@@ -138,22 +138,6 @@ const AccountSecurity: React.FC = () => {
           >
             Set up
           </Button>
-          <Button
-            variant="outlined"
-            onClick={() => setIsSocialModalOpen(true)}
-            sx={{
-              borderColor: '#E5E7EB',
-              color: '#374151',
-              '&:hover': {
-                borderColor: '#6366F1',
-                backgroundColor: 'rgba(99, 102, 241, 0.04)',
-              },
-              textTransform: 'none',
-              height: '36px',
-            }}
-          >
-            Set up for social logins
-          </Button>
           {showMfaError && (
             <FormHelperText 
               error 

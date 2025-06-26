@@ -12,6 +12,8 @@ import SetupLayout from './components/SetupLayout';
 import PayrunDetailsPage from './components/PayrunDetailsPage';
 import OffboardingFlow from './components/OffboardingFlow';
 import ResendPayslipsPage from './components/ResendPayslipsPage';
+import CompletePayrunPage from './components/CompletePayrunPage';
+import SubmitToATOPage from './components/SubmitToATOPage';
 import theme from './theme';
 
 function App() {
@@ -32,6 +34,8 @@ function App() {
                 }}
               />
             } />
+            <Route path="/payruns/:id/complete" element={<CompletePayrunPage />} />
+            <Route path="/payruns/:id/submit-ato" element={<SubmitToATOPage />} />
             <Route path="/payruns/:id/resend-payslips" element={<ResendPayslipsPage />} />
             <Route path="/setup" element={<SetupLayout />}>
               <Route path="business-details" element={<BusinessDetails />} />
