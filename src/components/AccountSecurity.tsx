@@ -28,6 +28,7 @@ const AccountSecurity: React.FC = () => {
   const [isMFAEnabled, setIsMFAEnabled] = useState(false);
   const [isSocialModalOpen, setIsSocialModalOpen] = useState(false);
   const [showResetToast, setShowResetToast] = useState(false);
+  const [showForgotToast, setShowForgotToast] = useState(false);
 
   const handleMFAStatusChange = (isEnabled: boolean) => {
     setIsMFAEnabled(isEnabled);
@@ -161,6 +162,7 @@ const AccountSecurity: React.FC = () => {
           setIsMFAEnabled(true);
           setIsAuthModalOpen(false);
         }}
+        onForgotPassword={() => setShowForgotToast(true)}
       />
 
       <RecoveryCodeModal
@@ -269,6 +271,40 @@ const AccountSecurity: React.FC = () => {
         message={
           <span style={{ fontSize: 14, fontWeight: 400 }}>
             Reset password email sent
+          </span>
+        }
+        style={{ left: 32, bottom: 32 }}
+      />
+      <Snackbar
+        open={showForgotToast}
+        autoHideDuration={3000}
+        onClose={() => setShowForgotToast(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        ContentProps={{
+          sx: {
+            bgcolor: '#32295E',
+            color: '#fff',
+            borderRadius: '8px',
+            width: 208,
+            minWidth: 0,
+            minHeight: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            fontSize: 14,
+            fontWeight: 400,
+            px: 1,
+            pl: 2,
+            py: 2,
+            boxShadow: '0px 4px 16px 0px rgba(16, 24, 40, 0.08)',
+            left: 32,
+            bottom: 32,
+            position: 'fixed',
+          }
+        }}
+        message={
+          <span style={{ fontSize: 14, fontWeight: 400 }}>
+            Password reset email sent
           </span>
         }
         style={{ left: 32, bottom: 32 }}

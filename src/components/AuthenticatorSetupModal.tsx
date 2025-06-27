@@ -19,12 +19,14 @@ interface AuthenticatorSetupModalProps {
   open: boolean;
   onClose: () => void;
   onComplete?: () => void;
+  onForgotPassword?: () => void;
 }
 
 export const AuthenticatorSetupModal: React.FC<AuthenticatorSetupModalProps> = ({
   open,
   onClose,
   onComplete,
+  onForgotPassword,
 }) => {
   const [password, setPassword] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
@@ -190,7 +192,10 @@ export const AuthenticatorSetupModal: React.FC<AuthenticatorSetupModalProps> = (
               <Link
                 component="button"
                 variant="body2"
-                onClick={() => {/* TODO: Handle forgot password */}}
+                onClick={() => {
+                  if (onForgotPassword) onForgotPassword();
+                  onClose();
+                }}
                 sx={{ 
                   textDecoration: 'none',
                   color: 'primary.main',
