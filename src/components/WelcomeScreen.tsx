@@ -31,6 +31,10 @@ const WelcomeScreen: React.FC = () => {
     navigate('/payruns/1');
   };
 
+  const handleSessionTimeout = () => {
+    navigate('/payruns', { state: { sessionTimeout: true } });
+  };
+
   return (
     <Box sx={{ bgcolor: 'white', minHeight: '100vh', py: 8 }}>
       <Container maxWidth="lg">
@@ -112,6 +116,23 @@ const WelcomeScreen: React.FC = () => {
               }}
             >
               Bulk email
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={handleSessionTimeout}
+              sx={{
+                px: 4,
+                py: 1.5,
+                borderRadius: '8px',
+                borderColor: '#E5E7EB',
+                color: '#374151',
+                '&:hover': {
+                  borderColor: '#D1D5DB',
+                  backgroundColor: '#F9FAFB',
+                },
+              }}
+            >
+              Session Timeout
             </Button>
           </Box>
         </Box>

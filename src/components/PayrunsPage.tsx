@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -16,13 +16,21 @@ import {
   List,
   ListItem,
   ListItemText,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Snackbar,
+  Link,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import StartPayrunModal from './StartPayrunModal';
+import DesignSystemTextField from '../design-system/DesignSystemTextField';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   borderBottom: '1px solid #E5E7EB',
@@ -119,6 +127,19 @@ const PayrunsPage: React.FC = () => {
   const [tabValue, setTabValue] = React.useState(0);
   const [selectedPayrun, setSelectedPayrun] = useState<typeof payRunData[0] | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [showSessionTimeout, setShowSessionTimeout] = useState(false);
+  const [sessionPassword, setSessionPassword] = useState('');
+  const [showForgotToast, setShowForgotToast] = useState(false);
+  const [showMfaModal, setShowMfaModal] = useState(false);
+  const [mfaCode, setMfaCode] = useState('');
+  const [mfaLoading, setMfaLoading] = useState(false);
+
+  useEffect(() => {
+    if (location.state && location.state.sessionTimeout) {
+      setShowSessionTimeout(true);
+    }
+  }, [location.state]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -295,6 +316,269 @@ const PayrunsPage: React.FC = () => {
         open={selectedPayrun !== null}
         onClose={() => setSelectedPayrun(null)}
         payrunData={selectedPayrun || payRunData[0]}
+      />
+      <Dialog
+        open={showSessionTimeout || showMfaModal}
+        onClose={() => {
+          setShowSessionTimeout(false);
+          setShowMfaModal(false);
+        }}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: '12px',
+            p: 0,
+            width: 500,
+            maxWidth: '90vw',
+          }
+        }}
+        BackdropProps={{
+          sx: {
+            backdropFilter: 'blur(8px)',
+            backgroundColor: 'rgba(0,0,0,0.25)',
+          }
+        }}
+      >
+        {showSessionTimeout && (
+          <React.Fragment>
+            <DialogTitle sx={{
+              pb: 1,
+              fontWeight: 600,
+              color: '#18113C',
+              fontSize: '24px',
+              mt: 1,
+            }}>
+              Ready to get back to those pay runs?
+            </DialogTitle>
+            <DialogContent sx={{ pt: 2, px: 3, pb: 0 }}>
+              <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+                For security reasons please enter your password again.
+              </Typography>
+              <DesignSystemTextField
+                type="password"
+                value={sessionPassword}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSessionPassword(e.target.value)}
+                width={300}
+                label={"Enter account password"}
+              />
+              <Box sx={{ mb: 1 }}>
+                <Link
+                  component="button"
+                  variant="body2"
+                  onClick={() => setShowForgotToast(true)}
+                  sx={{
+                    color: 'primary.main',
+                    fontWeight: 500,
+                    fontSize: 14,
+                    textDecoration: 'none',
+                    '&:hover': {
+                      textDecoration: 'underline',
+                    },
+                  }}
+                >
+                  Forgot password
+                </Link>
+              </Box>
+            </DialogContent>
+            <DialogActions sx={{ pl: 3, pr: 3, pb: 3, pt: 2, justifyContent: 'flex-end' }}>
+              <Box display="flex" gap={1}>
+                <Button
+                  onClick={() => setShowSessionTimeout(false)}
+                  variant="outlined"
+                  sx={{
+                    height: '32px',
+                    borderRadius: '8px',
+                    px: 2,
+                    fontWeight: 500,
+                    fontSize: 14,
+                    color: '#374151',
+                    borderColor: '#E5E7EB',
+                    textTransform: 'none',
+                    '&:hover': {
+                      borderColor: '#6366F1',
+                      backgroundColor: 'rgba(99, 102, 241, 0.04)',
+                    },
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowSessionTimeout(false);
+                    setShowMfaModal(true);
+                  }}
+                  variant="contained"
+                  sx={{
+                    height: '32px',
+                    borderRadius: '8px',
+                    px: 2,
+                    fontWeight: 500,
+                    fontSize: 14,
+                    backgroundColor: '#3D1CBA',
+                    color: '#fff',
+                    textTransform: 'none',
+                    boxShadow: 'none',
+                    '&:hover': {
+                      backgroundColor: '#3019A0',
+                    },
+                  }}
+                >
+                  Continue
+                </Button>
+              </Box>
+            </DialogActions>
+          </React.Fragment>
+        )}
+      </Dialog>
+      <Dialog
+        open={showMfaModal}
+        onClose={() => setShowMfaModal(false)}
+        maxWidth="sm"
+        fullWidth
+        hideBackdrop
+        PaperProps={{
+          sx: {
+            borderRadius: '12px',
+            p: 0,
+            width: 500,
+            maxWidth: '90vw',
+          }
+        }}
+      >
+        <DialogTitle sx={{
+          pb: 1,
+          fontWeight: 600,
+          color: '#18113C',
+          fontSize: '24px',
+          mt: 1,
+        }}>
+          Multi factor authentication
+        </DialogTitle>
+        <DialogContent sx={{ pt: 2, px: 3, pb: 0, minHeight: 120 }}>
+          {mfaLoading ? (
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 120 }}>
+              <CircularProgress size={32} sx={{ color: '#3D1CBA' }} />
+            </Box>
+          ) : (
+            <>
+              <Typography variant="subtitle1" fontWeight="medium" sx={{ mb: 1 }}>
+                Enter 6 digit authentication code
+              </Typography>
+              <DesignSystemTextField
+                value={mfaCode}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMfaCode(e.target.value)}
+                width={300}
+                placeholder="000 000"
+              />
+              <Box sx={{ mb: 1 }}>
+                <Link
+                  component="button"
+                  variant="body2"
+                  onClick={() => {}}
+                  sx={{
+                    color: 'primary.main',
+                    fontWeight: 500,
+                    fontSize: 14,
+                    textDecoration: 'none',
+                    '&:hover': {
+                      textDecoration: 'underline',
+                    },
+                  }}
+                >
+                  I can't use my authentication app
+                </Link>
+              </Box>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ pl: 3, pr: 3, pb: 3, pt: 2, justifyContent: 'flex-end' }}>
+          <Box display="flex" gap={1}>
+            <Button
+              onClick={() => setShowMfaModal(false)}
+              variant="outlined"
+              disabled={mfaLoading}
+              sx={{
+                height: '32px',
+                borderRadius: '8px',
+                px: 2,
+                fontWeight: 500,
+                fontSize: 14,
+                color: '#374151',
+                borderColor: '#E5E7EB',
+                textTransform: 'none',
+                '&:hover': {
+                  borderColor: '#6366F1',
+                  backgroundColor: 'rgba(99, 102, 241, 0.04)',
+                },
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                setMfaLoading(true);
+                setTimeout(() => {
+                  setMfaLoading(false);
+                  setShowMfaModal(false);
+                  navigate('/payruns');
+                }, 2000);
+              }}
+              variant="contained"
+              disabled={mfaLoading}
+              sx={{
+                height: '32px',
+                borderRadius: '8px',
+                px: 2,
+                fontWeight: 500,
+                fontSize: 14,
+                backgroundColor: '#3D1CBA',
+                color: '#fff',
+                textTransform: 'none',
+                boxShadow: 'none',
+                '&:hover': {
+                  backgroundColor: '#3019A0',
+                },
+              }}
+            >
+              Submit
+            </Button>
+          </Box>
+        </DialogActions>
+      </Dialog>
+      <Snackbar
+        open={showForgotToast}
+        autoHideDuration={3000}
+        onClose={() => setShowForgotToast(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        ContentProps={{
+          sx: {
+            bgcolor: '#32295E',
+            color: '#fff',
+            borderRadius: '8px',
+            width: 208,
+            minWidth: 0,
+            minHeight: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            fontSize: 14,
+            fontWeight: 400,
+            px: 1,
+            pl: 2,
+            py: 2,
+            boxShadow: '0px 4px 16px 0px rgba(16, 24, 40, 0.08)',
+            left: 32,
+            bottom: 32,
+            position: 'fixed',
+          }
+        }}
+        message={
+          <span style={{ fontSize: 14, fontWeight: 400 }}>
+            Password reset email sent
+          </span>
+        }
+        style={{ left: 32, bottom: 32 }}
       />
     </Box>
   );
