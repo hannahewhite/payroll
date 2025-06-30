@@ -117,6 +117,8 @@ const WelcomeScreen: React.FC = () => {
             >
               Bulk email
             </Button>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
             <Button
               variant="outlined"
               onClick={handleSessionTimeout}
