@@ -35,6 +35,10 @@ const WelcomeScreen: React.FC = () => {
     navigate('/payruns', { state: { sessionTimeout: true } });
   };
 
+  const handlePayroll = () => {
+    navigate('/payruns');
+  };
+
   return (
     <Box sx={{ bgcolor: 'white', minHeight: '100vh', py: 8 }}>
       <Container maxWidth="lg">
@@ -118,7 +122,7 @@ const WelcomeScreen: React.FC = () => {
               Bulk email
             </Button>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, gap: 2 }}>
             <Button
               variant="outlined"
               onClick={handleSessionTimeout}
@@ -135,6 +139,23 @@ const WelcomeScreen: React.FC = () => {
               }}
             >
               Session Timeout
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={handlePayroll}
+              sx={{
+                px: 4,
+                py: 1.5,
+                borderRadius: '8px',
+                borderColor: '#E5E7EB',
+                color: '#374151',
+                '&:hover': {
+                  borderColor: '#D1D5DB',
+                  backgroundColor: '#F9FAFB',
+                },
+              }}
+            >
+              Payroll
             </Button>
           </Box>
         </Box>

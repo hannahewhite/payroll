@@ -15,6 +15,7 @@ import ResendPayslipsPage from './components/ResendPayslipsPage';
 import CompletePayrunPage from './components/CompletePayrunPage';
 import SubmitToATOPage from './components/SubmitToATOPage';
 import theme from './theme';
+import Reports from './pages/Reports';
 
 function App() {
   return (
@@ -23,17 +24,7 @@ function App() {
         <Box sx={{ bgcolor: 'white', minHeight: '100vh', position: 'relative' }}>
           <Routes>
             <Route path="/" element={<WelcomeScreen />} />
-            <Route path="/payruns" element={<PayrunsPage />} />
-            <Route path="/payruns/:id" element={
-              <PayrunDetailsPage 
-                payrunData={{
-                  period: '26 Feb - 2 Mar',
-                  totalPayslips: 12,
-                  totalAmount: '$112,000.00',
-                  calendar: 'Weekly',
-                }}
-              />
-            } />
+            <Route path="/payruns/*" element={<PayrunsPage />} />
             <Route path="/payruns/:id/complete" element={<CompletePayrunPage />} />
             <Route path="/payruns/:id/submit-ato" element={<SubmitToATOPage />} />
             <Route path="/payruns/:id/resend-payslips" element={<ResendPayslipsPage />} />

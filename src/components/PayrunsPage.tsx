@@ -14,7 +14,6 @@ import {
   Tab,
   Chip,
   List,
-  ListItem,
   ListItemText,
   Dialog,
   DialogTitle,
@@ -22,6 +21,7 @@ import {
   DialogActions,
   Snackbar,
   Link,
+  ListItemButton,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -31,6 +31,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import StartPayrunModal from './StartPayrunModal';
 import DesignSystemTextField from '../design-system/DesignSystemTextField';
 import CircularProgress from '@mui/material/CircularProgress';
+import Reports from '../pages/Reports';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   borderBottom: '1px solid #E5E7EB',
@@ -81,7 +82,9 @@ const StatusChip = styled(Chip)<{ status: 'processing' | 'ready' | 'upcoming' }>
   },
 }));
 
-const SideNavItem = styled(ListItem)<{ active?: boolean }>(({ active }) => ({
+const SideNavItem = styled(ListItemButton, {
+  shouldForwardProp: (prop) => prop !== 'active',
+})<{ active?: boolean }>(({ active }) => ({
   borderRadius: '8px',
   marginBottom: '4px',
   padding: '8px 12px',
@@ -153,6 +156,10 @@ const PayrunsPage: React.FC = () => {
     setSelectedPayrun(payrun);
   };
 
+  const handleNav = (route: string) => {
+    navigate(route);
+  };
+
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'white' }}>
       {/* Sidebar */}
@@ -168,13 +175,13 @@ const PayrunsPage: React.FC = () => {
         }}
       >
         <List>
-          <SideNavItem active>
+          <SideNavItem active={location.pathname === '/payruns'} onClick={() => handleNav('/payruns')}>
             <ListItemText primary="Pay runs" />
           </SideNavItem>
-          <SideNavItem>
+          <SideNavItem active={location.pathname === '/payruns/superannuation'} onClick={() => handleNav('/payruns/superannuation')}>
             <ListItemText primary="Superannuation" />
           </SideNavItem>
-          <SideNavItem>
+          <SideNavItem active={location.pathname === '/payruns/reports'} onClick={() => handleNav('/payruns/reports')}>
             <ListItemText primary="Reports" />
           </SideNavItem>
         </List>
@@ -205,111 +212,115 @@ const PayrunsPage: React.FC = () => {
       {/* Main Content */}
       <Box sx={{ flex: 1, backgroundColor: 'white', py: 3, px: 7, display: 'flex', justifyContent: 'center' }}>
         <Box sx={{ maxWidth: '1000px', width: '100%' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-            <Typography variant="h5" sx={{ fontWeight: 600, color: '#111827' }}>
-              Payruns
-            </Typography>
-            <Button
-              variant="outlined"
-              sx={{
-                borderRadius: '8px',
-                textTransform: 'none',
-                color: '#374151',
-                borderColor: '#E5E7EB',
-                px: 3,
-                height: '32px',
-                fontSize: '14px',
-                fontWeight: 500,
-                '&:hover': {
-                  backgroundColor: '#F9FAFB',
-                  borderColor: '#D1D5DB',
-                },
-              }}
-            >
-              Off cycle pay run
-            </Button>
-          </Box>
-
-          <Box sx={{ borderBottom: 1, borderColor: '#E5E7EB' }}>
-            <Tabs 
-              value={tabValue} 
-              onChange={handleTabChange}
-              sx={{
-                '& .MuiTab-root': {
-                  textTransform: 'none',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  color: '#6B7280',
-                  '&.Mui-selected': {
-                    color: '#3D1CBA',
-                  },
-                },
-                '& .MuiTabs-indicator': {
-                  backgroundColor: '#3D1CBA',
-                },
-              }}
-            >
-              <Tab label="Upcoming pay runs" />
-              <Tab label="Completed" />
-            </Tabs>
-          </Box>
-
-          <TableContainer component={Paper} sx={{ boxShadow: 'none', mt: 2 }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>Pay run</StyledTableCell>
-                  <StyledTableCell>Payment Date</StyledTableCell>
-                  <StyledTableCell>Pay calendar</StyledTableCell>
-                  <StyledTableCell align="right">Wages</StyledTableCell>
-                  <StyledTableCell align="right">Employees</StyledTableCell>
-                  <StyledTableCell align="right">Status</StyledTableCell>
-                  <StyledTableCell></StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {payRunData.map((row, index) => (
-                  <TableRow key={index}>
-                    <StyledTableCell>{row.period}</StyledTableCell>
-                    <StyledTableCell>{row.paymentDate}</StyledTableCell>
-                    <StyledTableCell>{row.calendar}</StyledTableCell>
-                    <StyledTableCell align="right">{row.wages}</StyledTableCell>
-                    <StyledTableCell align="right">{row.employees}</StyledTableCell>
-                    <StyledTableCell align="right">
-                      <StatusChip 
-                        label={row.status.charAt(0).toUpperCase() + row.status.slice(1)} 
-                        status={row.status}
-                      />
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      <Button
-                        variant="outlined"
-                        onClick={() => handleStartPayrun(row)}
-                        sx={{
-                          textTransform: 'none',
-                          borderRadius: '8px',
-                          px: 2,
-                          py: 0,
-                          minHeight: '32px',
-                          height: '32px',
-                          fontSize: '14px',
-                          fontWeight: 500,
-                          color: '#374151',
-                          borderColor: '#E5E7EB',
-                          '&:hover': {
-                            backgroundColor: '#F9FAFB',
-                            borderColor: '#D1D5DB',
-                          },
-                        }}
-                      >
-                        Start
-                      </Button>
-                    </StyledTableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          {location.pathname === '/payruns/reports' ? (
+            <Reports />
+          ) : location.pathname === '/payruns' ? (
+            <>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Typography variant="h5" sx={{ fontWeight: 600, color: '#111827' }}>
+                  Payruns
+                </Typography>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    borderRadius: '8px',
+                    textTransform: 'none',
+                    color: '#374151',
+                    borderColor: '#E5E7EB',
+                    px: 3,
+                    height: '32px',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    '&:hover': {
+                      backgroundColor: '#F9FAFB',
+                      borderColor: '#D1D5DB',
+                    },
+                  }}
+                >
+                  Off cycle pay run
+                </Button>
+              </Box>
+              <Box sx={{ borderBottom: 1, borderColor: '#E5E7EB' }}>
+                <Tabs 
+                  value={tabValue} 
+                  onChange={handleTabChange}
+                  sx={{
+                    '& .MuiTab-root': {
+                      textTransform: 'none',
+                      fontSize: '14px',
+                      fontWeight: 500,
+                      color: '#6B7280',
+                      '&.Mui-selected': {
+                        color: '#3D1CBA',
+                      },
+                    },
+                    '& .MuiTabs-indicator': {
+                      backgroundColor: '#3D1CBA',
+                    },
+                  }}
+                >
+                  <Tab label="Upcoming pay runs" />
+                  <Tab label="Completed" />
+                </Tabs>
+              </Box>
+              <TableContainer component={Paper} sx={{ boxShadow: 'none', mt: 2 }}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell>Pay run</StyledTableCell>
+                      <StyledTableCell>Payment Date</StyledTableCell>
+                      <StyledTableCell>Pay calendar</StyledTableCell>
+                      <StyledTableCell align="right">Wages</StyledTableCell>
+                      <StyledTableCell align="right">Employees</StyledTableCell>
+                      <StyledTableCell align="right">Status</StyledTableCell>
+                      <StyledTableCell></StyledTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {payRunData.map((row, index) => (
+                      <TableRow key={index}>
+                        <StyledTableCell>{row.period}</StyledTableCell>
+                        <StyledTableCell>{row.paymentDate}</StyledTableCell>
+                        <StyledTableCell>{row.calendar}</StyledTableCell>
+                        <StyledTableCell align="right">{row.wages}</StyledTableCell>
+                        <StyledTableCell align="right">{row.employees}</StyledTableCell>
+                        <StyledTableCell align="right">
+                          <StatusChip 
+                            label={row.status.charAt(0).toUpperCase() + row.status.slice(1)} 
+                            status={row.status}
+                          />
+                        </StyledTableCell>
+                        <StyledTableCell>
+                          <Button
+                            variant="outlined"
+                            onClick={() => handleStartPayrun(row)}
+                            sx={{
+                              textTransform: 'none',
+                              borderRadius: '8px',
+                              px: 2,
+                              py: 0,
+                              minHeight: '32px',
+                              height: '32px',
+                              fontSize: '14px',
+                              fontWeight: 500,
+                              color: '#374151',
+                              borderColor: '#E5E7EB',
+                              '&:hover': {
+                                backgroundColor: '#F9FAFB',
+                                borderColor: '#D1D5DB',
+                              },
+                            }}
+                          >
+                            Start
+                          </Button>
+                        </StyledTableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </>
+          ) : null}
         </Box>
       </Box>
       <StartPayrunModal

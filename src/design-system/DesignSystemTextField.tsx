@@ -25,13 +25,16 @@ const DesignSystemTextField: React.FC<DesignSystemTextFieldCustomProps & TextFie
         fullWidth
         variant="outlined"
         sx={{
-          mb: 1,
           width,
           fontFamily: 'SF Pro Text',
           '& .MuiOutlinedInput-root': {
             borderRadius: '8px',
             height: '32px',
             fontFamily: 'SF Pro Text',
+          },
+          '& input[type="date"]': {
+            padding: '6px 12px',
+            height: '20px',
           },
           '& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline': {
             borderColor: '#C9150C',
