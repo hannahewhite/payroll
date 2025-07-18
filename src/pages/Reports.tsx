@@ -176,6 +176,8 @@ const Reports: React.FC = () => {
                 selected={selectedPayCalendars}
                 onChange={setSelectedPayCalendars}
                 width="100%"
+                showSearch={true}
+                showSelectAll={true}
               />
             </Box>
             <Box sx={{ flex: 1, minWidth: 180 }}>
